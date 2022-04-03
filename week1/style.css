@@ -12,7 +12,6 @@
 body{
   width:100%;
   margin:0;
-  height:100000px;
 }
 header{
   display: flex;
@@ -76,6 +75,9 @@ main{
   justify-content: center;
   align-items: center;
 }
+.burger_container > h2{
+  display: none;
+}
 .burger_card{
   display: flex;
   align-items: center;
@@ -123,8 +125,8 @@ img{
   flex:100px;
 }
 .cart {
-  position: fixed;
-  right:0;
+  position: sticky;
+  top:0;
   display: flex;
   flex-direction: column;
   width: 200px;
