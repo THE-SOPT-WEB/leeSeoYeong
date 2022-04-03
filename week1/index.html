@@ -4,14 +4,55 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <title>Vite App</title>
   </head>
   <body>
     <header>
-      <h1>햄식이를 도와줘</h1>
+      <h1>🍔햄식이를 도와줘🍔</h1>
     </header>
+
+    <main>
+      <aside class="sideBar">
+        <h3>다른거 먹자</h3>
+        <ul>
+          <li>맥도날드</li>
+          <li>버거킹</li>
+        </ul>
+      </aside>
+
+      <aside class="cart">
+        <h2>장바구니</h2>
+        <h2>누적 금액</h2>
+        <span>0원</span>
+        <div class="cart_buttons">
+          <button>주문하기</button>
+          <button>취소하기</button>
+        </div>
+      </aside>
+
+      <section class="burger_cont">
+        <article class="burger_card">
+          <img src="./hamburger.png" />
+          <div class="burger_content">
+            <h2>불고기버거</h2>
+            <div class="burger_price">5,500원</div>
+            <span class="burger_desc">근본 햄버거에요</span>
+          </div>
+        </article>
+        <article>
+          <img src="./hamburger.png" />
+          <div class="burger_content">
+            <h2>새우버거</h2>
+            <div class="burger_price">6,500원</div>
+            <span class="burger_desc">맛있는 새우</span>
+          </div>
+        </article>
+      </section>
+    </main>
     <script type="module" src="/main.js"></script>
-
-
   </body>
 </html>
