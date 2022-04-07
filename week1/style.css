@@ -111,7 +111,7 @@ body{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-img{
+.burger_card > img{
   width:10rem;
   height:10rem;
 }
@@ -206,7 +206,7 @@ img{
   .burger_content>span {
     font-size: 11px;
   }
-  img{
+  .burger_card > img{
     width:80px;
     height:90px;
   }
@@ -222,7 +222,7 @@ img{
       width:30%;
       text-indent: 20%;
     }
-    img{
+    .burger_card > img{
       width:70px;
       height:70px;
     }
