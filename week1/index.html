@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -8,24 +8,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <title>Vite App</title>
+    <title>🍔햄식이를 도와줘🍔</title>
   </head>
   <body>
-    <header>
+    <header class="header">
       <h1>🍔햄식이를 도와줘🍔</h1>
     </header>
 
-    <main>
-      <aside class="sideBar">
-        <h3>다른거 먹자</h3>
-        <ul>
-          <li>맥도날드</li>
-          <li>버거킹</li>
+    <main class="main_container">
+      <nav class="sideBar">
+        <h2 class="sideBar_title">다른거 먹자</h2>
+        <ul class="sideBar_nav_lists">
+          <li class="sideBar_nav_list">맥도날드</li>
+          <li class="sideBar_nav_list">버거킹</li>
         </ul>
-      </aside>
+      </nav>
 
       <section class="burger_container">
-        <h2>햄버거 컨테이너</h2>
+        <h2 class="burger_title">햄버거 컨테이너</h2>
         <article class="burger_card">
           <img src="./hamburger.png" alt="햄버거"/>
           <div class="burger_content">
@@ -108,17 +108,17 @@
         </article>
       </section>
 
-      <aside class="cart_container">
-        <aside class="cart">
-          <h2>장바구니</h2>
-          <h2>누적 금액</h2>
-          <span>0원</span>
+      <nav class="cart_wrapper">
+        <div class="cart_container">
+          <strong>장바구니</strong>
+          <strong>누적 금액</strong>
+          <span class="cart_container_total">0원</span>
           <div class="cart_buttons">
-            <button>주문하기</button>
-            <button>취소하기</button>
+            <button class="cart_button">주문하기</button>
+            <button class="cart_button">취소하기</button>
           </div>
-        </aside>
-      </aside>
+        </div>
+      </nav>
     </main>
     <script type="module" src="/main.js"></script>
   </body>
