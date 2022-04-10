@@ -1,0 +1,230 @@
+html{
+  font-size: 62.5%;
+}
+*{
+  font-family: 'Noto Sans KR',
+  sans-serif;
+}
+body{
+  width:100%;
+  margin:0;
+}
+.header{
+  display: flex;
+  background-color: #C30022;
+  height:5rem;
+  justify-content: center;
+  align-items: center;
+}
+.header > h1{
+  color:#fff;
+  font-size: 2rem;
+}
+.main_container{
+  display: flex;
+  margin-top:3rem;
+}
+/* 다른거 먹자 네비게이션 */
+.sideBar{
+  flex:0.4;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width:fit-content;
+  height:fit-content;
+  padding:2rem;
+  margin-left:3rem;
+  border-radius: 1.5rem;
+  background-color: #FFE864;
+}
+.sideBar > .sideBar_title{
+  margin:0;
+}
+.sideBar_nav_lists{
+  display:flex;
+  flex-direction: column;
+  list-style: none;
+  width:100%;
+  margin:0;
+  padding: 0;
+}
+.sideBar_nav_list{
+  border-radius: .5rem;
+  margin-top: 1rem;
+  padding:.2rem 0 .2rem .5rem;
+  background-color: #fff;
+  color:#FF9B64;
+  font-weight: bold;
+  font-size: 14px;
+}
+.sideBar_nav_list:hover,.cart_buttons>button:hover{
+  background-color: #FF9B64;
+  color:#fff;
+}
+
+/* 중앙 햄버거 카드 */
+.burger_container{
+  flex:4;
+  display:flex;
+  flex-wrap: wrap;
+  padding:0 2rem;
+  justify-content: center;
+}
+.burger_container > .burger_title{
+  display: none;
+}
+.burger_card{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:40%;
+  height:15rem;
+  margin:0 3rem 5rem 0;
+  border-radius: 1.5rem;
+  box-shadow: .2rem .2rem .7rem .3rem #bdbdbd;
+  cursor: pointer;
+}
+.burger_card:hover{
+  background-color: #FF9B64;
+  color:#fff;
+}
+.burger_content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: start;
+  width:50%;
+  text-indent: 30%;
+}
+.burger_content > h2{
+  font-size: 1.8rem;
+  margin:0;
+}
+.burger_content > span{
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.burger_content > h2, .burger_content > span{
+    display:block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.burger_card > img{
+  width:10rem;
+  height:10rem;
+}
+
+/* 장바구니 */
+.cart_wrapper{
+  flex:0.9;
+}
+.cart_container {
+  position: sticky;
+  top:0;
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  height: fit-content;
+  padding: 2rem;
+  margin-right: 1rem;
+  border-radius: 1.5rem;
+  background-color: #FFE864;
+}
+
+.cart_container > strong {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.cart_container > strong:nth-child(1):after,
+.cart_container > .cart_container_total::after {
+  display: block;
+  content: '';
+  width: 100%;
+  height: .2rem;
+  margin: 3rem 0 2rem 0;
+  background-color: #fff;
+}
+
+.cart_container>.cart_container_total {
+  font-size: 15px;
+  margin-top: 1.5rem;
+  font-weight: bold;
+}
+
+.cart_buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.cart_buttons> .cart_button {
+  border: none;
+  border-radius: 1.5rem;
+  padding: .2rem 1rem;
+  background-color: #fff;
+  color: #FF9B64;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cart_buttons> .cart_button:first-child {
+  margin-right: .4rem;
+}
+
+@media (max-width:1300px){
+  .sideBar{
+    position:absolute;
+    top:0;
+    left:10px;
+    padding:3px 0 0 0;
+    background-color: transparent;
+  }
+  .sideBar > .sideBar_title{
+    display: none;
+  }
+  .sideBar > .sideBar_nav_lists >.sideBar_nav_list{
+    font-size: 12px;
+    margin:0;
+    padding-right:5px;
+  }
+  .sideBar>.sideBar_nav_lists > .sideBar_nav_list+li{
+    margin-top:2px;
+  }
+  .burger_container {
+    flex: 3;
+  }
+  .burger_card{
+    width:45%;
+  }
+  .burger_content>h2 {
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .burger_content>span {
+    font-size: 11px;
+  }
+  .burger_card > img{
+    width:80px;
+    height:90px;
+  }
+ 
+  @media (max-width:900px){
+    .burger_container{
+      flex:10;
+    }
+    .burger_card {
+      width:95%;
+    }
+    .burger_content {
+      width:30%;
+      text-indent: 20%;
+    }
+    .burger_card > img{
+      width:70px;
+      height:70px;
+    }
+  }
+}
