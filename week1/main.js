@@ -2,6 +2,23 @@ const $ = (selector) => document.querySelector(selector);
 
 function addMenuInCart(cart, contents) {
     console.log(contents);
+    const menuBox = cart.querySelector(".menu__box");
+    const menuName = contents[0];
+    const menuPrice = contents[1];
+
+    const menuInfo = document.createElement("div");
+    menuInfo.innerHTML = `
+        <ul class="menu__info-lists">
+            <li class="menu__info-list">
+                <strong class="menu__name">${menuName}</strong> 
+                <input type="number" />
+                <strong class="menu__price">${menuPrice}</strong>
+                <button class="menu__btn-delete">X</button>
+            </li>
+        </ul>
+    `;
+    menuBox.appendChild(menuInfo);
+    console.log(menuBox);
 }
 
 function clickBurgerCard({ container, cart }) {
@@ -30,6 +47,5 @@ window.onload = () => {
     storeManager({
         container: document.querySelectorAll(".burger__container"),
         cart: $(".cart__container"),
-
     });
-}
+};
