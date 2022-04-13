@@ -6,16 +6,15 @@ function addMenuInCart(cart, contents) {
     const menuName = contents[0];
     const menuPrice = contents[1];
 
-    const menuInfo = document.createElement("div");
+    const menuInfo = document.createElement("ul");
+    menuInfo.classList.add("menu__info-lists");
     menuInfo.innerHTML = `
-        <ul class="menu__info-lists">
-            <li class="menu__info-list">
+        <li class="menu__info-list">
                 <strong class="menu__name">${menuName}</strong> 
-                <input type="number" />
+                <input type="number" value="1"/>
                 <strong class="menu__price">${menuPrice}</strong>
                 <button class="menu__btn-delete">X</button>
             </li>
-        </ul>
     `;
     menuBox.appendChild(menuInfo);
     console.log(menuBox);
