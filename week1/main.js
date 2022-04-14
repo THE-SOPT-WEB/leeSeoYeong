@@ -2,6 +2,20 @@ const $ = (selector) => document.querySelector(selector);
 
 let cartList = [];
 
+function removeMenu(e) {
+    const menuName = e.path[1].children[0].innerText;
+    const menu = e.path[2]; //지울 메뉴 ul 태그.
+    const menuPrice = parsePriceToNumber(e.path[1].children[2].innerText); //지울 메뉴의 가격.
+    const menuBox = $(".menu__box");
+    const totalPrice = $(".cart__container > .cart__container-total > strong ");
+
+    menuBox.removeChild(menu); //.menu__box에서 해당 ul태그를 지운다.
+    let index = cartList.indexOf(menuName);//장바구니에서 해당 메뉴를 찾아서 삭제한다.
+    cartList.splice(index, 1);
+    totalPrice.innerText = +totalPrice.innerText - menuPrice;
+    console.log(totalPrice);
+}
+
 function parsePriceToNumber(price) {
     const removedComma = price.slice(0, -1)
         .replace(/\D/g, "");
@@ -16,18 +30,16 @@ function addMenuInCart(cart, contents) {
     const menuName = contents[0];
     const menuPrice = parsePriceToNumber(contents[1]);
 
-    if (cartList.includes(menuName)) {//이미 장바구니에 넣었다면 개수만 증가
+    if (cartList.includes(menuName)) {//이미 장바구니에 넣었던 메뉴라면 개수만 증가
         const newMenus = document.querySelectorAll(".menu__info-list");
         for (let newMenu of newMenus) {
             const newMenuName = newMenu.querySelector(".menu__name").innerText;
             const newMenuInput = newMenu.querySelector("input");
             if (newMenuName === menuName) {
                 newMenuInput.value = +newMenuInput.value + 1;
-                console.log(newMenuInput);
             }
         }
-        // menuCount.value = +menuCount.value + 1;
-    } else {
+    } else {//장바구니에 처음 넣는 메뉴인 경우.
         cartList.push(contents[0]); //장바구니에 메뉴이름 추가
 
         const menuInfo = document.createElement("ul");
@@ -37,13 +49,17 @@ function addMenuInCart(cart, contents) {
                 <strong class="menu__name">${menuName}</strong> 
                 <input type="number" value="1"/>
                 <strong class="menu__price">${menuPrice}원</strong>
-                <button class="menu__btn-delete">X</button>
+                <button type="button" class="menu__btn-delete">X</button>
             </li>
     `;
         menuBox.appendChild(menuInfo);
     }
+    totalPrice.innerText = +totalPrice.innerText + menuPrice; //누적금액을 메뉴가격만큼 증가시킨다.
 
-    totalPrice.innerText = +totalPrice.innerText + menuPrice;
+    const removeButtons = document.querySelectorAll(".menu__btn-delete");
+    for (let removeButton of removeButtons) {
+        removeButton.addEventListener("click", removeMenu);
+    }
 }
 
 function clickBurgerCard({ container, cart }) {
