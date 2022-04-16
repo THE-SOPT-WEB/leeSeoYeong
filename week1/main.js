@@ -107,6 +107,11 @@ function addMenuInCart(cart, contents) {
     }
     totalPrice.innerText = +totalPrice.innerText + menuPrice * menuCount; //누적금액을 메뉴가격만큼 증가시킨다.
 
+    cart.classList.add("add"); //장바구니 애니메이션 추가.
+    setTimeout(() => {
+        cart.classList.remove("add");
+    }, 200);
+
     const removeButtons = document.querySelectorAll(".menu__btn-delete"); // X버튼 클릭 시.
     for (let removeButton of removeButtons) {
         removeButton.addEventListener("click", removeMenu);
