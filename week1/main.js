@@ -2,8 +2,22 @@ const $ = (selector) => document.querySelector(selector);
 
 let cartList = [];
 
-function showModal(cart) {
+function hideModal(modal) {
+    modal.classList.add("hide");
+}
 
+function showModal() {
+    const modal = $(".modal__container");
+    modal.classList.remove("hide");
+
+    const yesButton = modal.querySelector(".order__button");
+    const noButton = modal.querySelector(".cancel__button");
+    yesButton.addEventListener("click", () => {
+        hideModal(modal);
+    });
+    noButton.addEventListener("click", () => {
+        hideModal(modal);
+    });
 }
 
 function resetCart(cart) {
@@ -31,7 +45,7 @@ function handleCartButtons({ container, cart }) {
     const cancelButton = buttons[1];
     console.log(cancelButton);
     orderButton.addEventListener("click", function () {
-        showModal(cart);
+        showModal();
     });
     cancelButton.addEventListener("click", function () {
         resetCart(cart);

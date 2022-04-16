@@ -151,35 +151,35 @@ body {
 
 .cart__container > .menu__box > .menu__info-lists {
   list-style: none;
-  width:100%;
-  margin:0;
-  padding:0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
-.menu__box > .menu__info-lists:first-child{
-  padding:10px 0 0 0;
+.menu__box > .menu__info-lists:first-child {
+  padding: 10px 0 0 0;
 }
 
 .menu__box .menu__info-lists > .menu__info-list {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin:3px 0;
+  margin: 3px 0;
 }
 .menu__info-list > .menu__name,
-.menu__info-list > .menu__price{
-  width:30%;
+.menu__info-list > .menu__price {
+  width: 30%;
   font-size: 12px;
 }
-.menu__info-list>input{
-  width:40px;
+.menu__info-list > input {
+  width: 40px;
 }
-.menu__info-list > .menu__btn-delete{
-  background:none;
+.menu__info-list > .menu__btn-delete {
+  background: none;
   border: none;
   background-color: #ff9b64;
-  border-radius:50%;
+  border-radius: 50%;
   font-size: 12px;
-  color:#fff;
+  color: #fff;
 }
 
 .cart__container > .cart__container-total {
@@ -205,6 +205,74 @@ body {
 
 .cart__buttons > .cart__button:first-child {
   margin-right: 0.4rem;
+}
+
+/*  모달 스타일링 */
+.modal__container {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal__container.hide{
+  display: none;
+}
+
+.modal__container > .modal__contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap:20px;
+  text-align: center;
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  background-color: #fff;
+  width: 200px;
+  height:100px;
+  border-radius: 15px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.modal__contents > .modal__buttons{
+  display: flex;
+  justify-content: center;
+  gap:10px;
+}
+.modal__buttons > button{
+  width:50px;
+  padding:4px 0;
+  color:#fff;
+  background-color: #ff9b64;
+  border:none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.modal__buttons > .order__button a{
+  text-decoration: none;
+  color:#fff;
+}
+
+/* 완료 페이지 스타일링 */
+.complete__container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:100vh;
+  background-color: #ff9b64;
+}
+.complete__container > h1{
+  width:fit-content;
+  padding:30px;
+  border-radius: 20px;
+  background-color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  color:#232332;
 }
 
 @media (max-width: 1300px) {
