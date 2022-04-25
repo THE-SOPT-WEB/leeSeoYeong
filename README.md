@@ -3,3 +3,5 @@
 | 주차  | 과제 내용 |  🔗 링크  | 
 |---|---|---|
 | 1주차  | 🍔햄식이를 도와줘🍔  | [Link](https://github.com/THE-SOPT-WEB/leeSeoYeong/pull/1)  | 
+| 2주차-1  | 후 아 유? | [Link](https://github.com/THE-SOPT-WEB/leeSeoYeong/pull/2)  | 
+| 2주차-2 | 햄식스의 장바구니 🛒 | [Link](https://github.com/THE-SOPT-WEB/leeSeoYeong/pull/3)  | 
