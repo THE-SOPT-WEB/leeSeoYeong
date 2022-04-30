@@ -4,7 +4,7 @@ import 버논 from "../img/버논.jpg";
 import 서강준 from "../img/서강준.jpg";
 import 원빈 from "../img/원빈.jpg";
 import 차은우 from "../img/차은우.jpg";
-import ResultPage from "./ResultPage";
+import ResultPage from "./ResultPage.jsx";
 
 const objs = [
   { name: "버논", src: 버논 },
