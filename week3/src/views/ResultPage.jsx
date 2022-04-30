@@ -1,10 +1,30 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 import 왕관 from "../img/crown.png";
+import Toast from "../components/Toast.jsx";
 
 function ResultPage({ winner }) {
+  const [toastStatus, setToastStatus] = useState(false);
+  function handleShareButton() {
+    setToastStatus(true);
+    const text = document.createElement("textarea");
+    document.body.appendChild(text);
+    text.value = "https://idealwordcup-9s1dnxux8-leeseooo.vercel.app/";
+    text.select();
+    document.execCommand("copy");
+    document.body.removeChild(text);
+  }
+
+  useEffect(() => {
+    if (toastStatus) {
+      setTimeout(() => {
+        setToastStatus(false);
+      }, 1000);
+    }
+  }, [toastStatus]);
+
   return (
     <ResultWrapper>
       <img src={왕관} alt="왕관" />
@@ -15,8 +35,11 @@ function ResultPage({ winner }) {
         <Link to="/">
           <button type="button">다시하기</button>
         </Link>
-        <button type="button">공유하기</button>
+        <button type="button" onClick={() => handleShareButton()}>
+          공유하기
+        </button>
       </div>
+      {toastStatus && <Toast message="📨 링크가 공유되었습니다 !" />}
     </ResultWrapper>
   );
 }
@@ -27,8 +50,8 @@ const ImageWrapper = styled.div`
   gap: 5px;
 
   img {
-    width: 500px;
-    height: 500px;
+    width: 480px;
+    height: 480px;
     max-width: 100%;
     object-fit: cover;
     border-radius: 5px;

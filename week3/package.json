@@ -7,7 +7,6 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "homepage": "https://idealwordcup.netlify.app/",
   "dependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
