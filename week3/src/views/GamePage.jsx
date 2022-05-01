@@ -6,7 +6,7 @@ import 원빈 from "../img/원빈.jpg";
 import 차은우 from "../img/차은우.jpg";
 import ResultPage from "./ResultPage.jsx";
 
-const objs = [
+const gameInfo = [
   { name: "버논", src: 버논 },
   { name: "서강준", src: 서강준 },
   { name: "원빈", src: 원빈 },
@@ -14,76 +14,63 @@ const objs = [
 ];
 
 function GamePage() {
-  const [persons, setPersons] = useState([]);
-  const [competitors, setCompetitors] = useState([objs[0], objs[1]]); //경쟁할 두 명 저장 배열
-  const [roundCount, setRoundCount] = useState(1);
-  const [totalRoundCount, setTotalRoundCount] = useState(2);
-  const [winners, setWinners] = useState([]);
-  const [isFinished, setIsFinished] = useState(false);
 
-  const result = useRef(null);
+  const [fighterInfo, setFighterInfo] = useState([]);
+  const [fighterList, setFighterList] = useState([]);
+  const [round, setRound] = useState(1);
+  const [totalRound, setTotalRound] = useState(2);
+  const [isFinished, setIsFinished] = useState(false);
+  let matchWinners = useRef([]);
 
   useEffect(() => {
-    setIsFinished(false);
-    setPersons(objs);
-    setCompetitors([objs[0], objs[1]]);
+    setFighterInfo(gameInfo);
+    setFighterList([gameInfo[0], gameInfo[1]]);
   }, []);
 
-  function getObject(name) {
-    for (let obj of objs) {
-      if (obj.name === name) {
-        return obj;
-      }
-    }
-  }
-
   function handleClick(e) {
-    let targetName = e.target.alt; //클릭한 img 태그의 alt(연예인 이름)
-
-    if (persons.length <= 2) {
-      //결승
-      if (winners.length === 0) {
-        result.current.innerText = targetName;
-        setCompetitors([getObject(targetName)]);
-        setIsFinished(true);
-      } else {
-        setTotalRoundCount(1);
-        setRoundCount(1);
-
-        let newCompetitors;
-        newCompetitors = [winners[0], getObject(targetName)];
-
-        setPersons(newCompetitors);
-        setCompetitors([newCompetitors[0], newCompetitors[1]]);
-        setWinners([]);
+    let target = e.target.alt;
+    gameInfo.forEach((info) => {
+      if (info.name === target) {
+        matchWinners.current.push(info);
       }
-    } else if (persons.length > 2) {
-      //준결승
-      setWinners([getObject(targetName)]);
-      setCompetitors([persons[2], persons[3]]);
-      setPersons(persons.slice(2));
-      setRoundCount((prev) => prev + 1);
+    });
+    if (totalRound === 1 && matchWinners.current.length === 1) {//모든 라운드가 끝난 경우
+      setIsFinished(true);
+      setFighterInfo(matchWinners.current[0]);
+    }
+    if (fighterInfo.length === 1) { //준결승 2번째 클릭 시-> 결승 진출
+      setRound(1);
+      setTotalRound(1);
+      setFighterInfo([matchWinners.current]);
+      setFighterList([matchWinners.current[0], matchWinners.current[1]]);
+
+      matchWinners.current = [];
+    } else { //준결승 1번째 클릭 시 -> 2번째 후보들 출전
+      setFighterInfo([fighterInfo.slice(2)]);
+      setFighterList([gameInfo[2], gameInfo[3]]);
+
+      setRound((prev) => prev + 1);
     }
   }
 
   return (
     <MainWrapper>
       <h1 className="main__title">눈이 즐거운 이상형 월드컵</h1>
-      <p className="main__round" ref={result}>
-        {roundCount}/{totalRoundCount}
+      <p className="main__round">
+        {round}/{totalRound}
       </p>
 
       {isFinished ? (
-        <ResultPage winner={competitors[0]} />
+        <ResultPage winner={fighterInfo[0]}/>
       ) : (
         <MainContainer>
-          {competitors.map((competitor) => {
+          {fighterList.map((fighter) => {
             return (
-              <article onClick={handleClick} className="cont__item">
-                <p className="item__name">{competitor.name}</p>
+              <article onClick={handleClick} className="cont__item" key={fighter.name}>
+                <p className="item__name">{fighter.name}</p>
                 <img
-                  src={competitor.src}
-                  alt={competitor.name}
+                  src={fighter.src}
+                  alt={fighter.name}
                   className="item__img"
                 />
               </article>

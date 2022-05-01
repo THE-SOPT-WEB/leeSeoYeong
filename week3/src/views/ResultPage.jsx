@@ -5,13 +5,14 @@ import styled from "styled-components";
 import 왕관 from "../img/crown.png";
 import Toast from "../components/Toast.jsx";
 
-function ResultPage({ winner }) {
+function ResultPage({winner}) {
   const [toastStatus, setToastStatus] = useState(false);
+  
   function handleShareButton() {
     setToastStatus(true);
     const text = document.createElement("textarea");
     document.body.appendChild(text);
-    text.value = "https://idealwordcup-9s1dnxux8-leeseooo.vercel.app/";
+    text.value = "https://idealwordcup.vercel.app/";
     text.select();
     document.execCommand("copy");
     document.body.removeChild(text);
@@ -29,13 +30,13 @@ function ResultPage({ winner }) {
     <ResultWrapper>
       <img src={왕관} alt="왕관" />
       <ImageWrapper>
-        <img src={winner.src} alt={winner.name} className="item__img" />
+        <img src={winner[0].src} alt={winner[0].name} className="item__img" />
       </ImageWrapper>
       <div className="main__buttons">
         <Link to="/">
           <button type="button">다시하기</button>
         </Link>
-        <button type="button" onClick={() => handleShareButton()}>
+        <button type="button" onClick={handleShareButton}>
           공유하기
         </button>
       </div>
@@ -50,7 +51,7 @@ const ImageWrapper = styled.div`
   gap: 5px;
 
   img {
-    width: 480px;
+    width:480px;
     height: 480px;
     max-width: 100%;
     object-fit: cover;
@@ -71,9 +72,9 @@ const ResultWrapper = styled.div`
 
   & > img {
     position: absolute;
-    width: 300px;
-    height: 200px;
-    top: 40px;
+    width: 330px;
+    height: 230px;
+    top: -30px;
     left: 50%;
     transform: translateX(-50%);
   }
