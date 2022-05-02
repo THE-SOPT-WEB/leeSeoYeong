@@ -21,6 +21,8 @@ function GamePage() {
   const [isFinished, setIsFinished] = useState(false);
   let matchWinners = useRef([]);
 
+  const versusImg = document.querySelector(".versus__img");
+
   useEffect(() => {
     setFighterInfo(gameInfo);
     setFighterList([gameInfo[0], gameInfo[1]]);
@@ -28,9 +30,11 @@ function GamePage() {
 
   function handleClick(e) {
     e.target.classList.add("active");
+    versusImg.classList.add("hide");
 
     setTimeout(() => {
       e.target.classList.remove("active");
+      versusImg.classList.remove("hide");
 
       let target = e.target.alt;
       gameInfo.forEach((info) => {
@@ -72,6 +76,7 @@ function GamePage() {
         <ResultPage winner={fighterInfo[0]} />
       ) : (
         <MainContainer>
+          <img src="src/img/vs.png" alt="대결" className="versus__img" />
           {fighterList.map((fighter) => {
             return (
               <article
@@ -98,6 +103,19 @@ const MainContainer = styled.div`
   display: flex;
   margin: 0 auto;
   gap: 5px;
+
+  .hide {
+    display: none;
+  }
+
+  .versus__img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    z-index: 1;
+  }
 
   .cont__item {
     display: flex;
@@ -128,8 +146,9 @@ const MainContainer = styled.div`
   }
   .item__img.active {
     animation: zoom 1.5s ease;
-    z-index:1;
+    z-index: 1;
   }
+
   @keyframes zoom {
     0% {
       transform: scale(1, 1);
