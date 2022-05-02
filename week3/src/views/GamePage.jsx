@@ -14,7 +14,6 @@ const gameInfo = [
 ];
 
 function GamePage() {
-
   const [fighterInfo, setFighterInfo] = useState([]);
   const [fighterList, setFighterList] = useState([]);
   const [round, setRound] = useState(1);
@@ -28,29 +27,38 @@ function GamePage() {
   }, []);
 
   function handleClick(e) {
-    let target = e.target.alt;
-    gameInfo.forEach((info) => {
-      if (info.name === target) {
-        matchWinners.current.push(info);
+    e.target.classList.add("active");
+
+    setTimeout(() => {
+      e.target.classList.remove("active");
+
+      let target = e.target.alt;
+      gameInfo.forEach((info) => {
+        if (info.name === target) {
+          matchWinners.current.push(info);
+        }
+      });
+      if (totalRound === 1 && matchWinners.current.length === 1) {
+        //모든 라운드가 끝난 경우
+        setIsFinished(true);
+        setFighterInfo(matchWinners.current[0]);
       }
-    });
-    if (totalRound === 1 && matchWinners.current.length === 1) {//모든 라운드가 끝난 경우
-      setIsFinished(true);
-      setFighterInfo(matchWinners.current[0]);
-    }
-    if (fighterInfo.length === 1) { //준결승 2번째 클릭 시-> 결승 진출
-      setRound(1);
-      setTotalRound(1);
-      setFighterInfo([matchWinners.current]);
-      setFighterList([matchWinners.current[0], matchWinners.current[1]]);
+      if (fighterInfo.length === 1) {
+        //준결승 2번째 클릭 시-> 결승 진출
+        setRound(1);
+        setTotalRound(1);
+        setFighterInfo([matchWinners.current]);
+        setFighterList([matchWinners.current[0], matchWinners.current[1]]);
 
-      matchWinners.current = [];
-    } else { //준결승 1번째 클릭 시 -> 2번째 후보들 출전
-      setFighterInfo([fighterInfo.slice(2)]);
-      setFighterList([gameInfo[2], gameInfo[3]]);
+        matchWinners.current = [];
+      } else {
+        //준결승 1번째 클릭 시 -> 2번째 후보들 출전
+        setFighterInfo([fighterInfo.slice(2)]);
+        setFighterList([gameInfo[2], gameInfo[3]]);
 
-      setRound((prev) => prev + 1);
-    }
+        setRound((prev) => prev + 1);
+      }
+    }, 1500);
   }
 
   return (
@@ -61,12 +69,16 @@ function GamePage() {
       </p>
 
       {isFinished ? (
-        <ResultPage winner={fighterInfo[0]}/>
+        <ResultPage winner={fighterInfo[0]} />
       ) : (
         <MainContainer>
           {fighterList.map((fighter) => {
             return (
-              <article onClick={handleClick} className="cont__item" key={fighter.name}>
+              <article
+                onClick={handleClick}
+                className="cont__item"
+                key={fighter.name}
+              >
                 <p className="item__name">{fighter.name}</p>
                 <img
                   src={fighter.src}
@@ -101,7 +113,7 @@ const MainContainer = styled.div`
     z-index: 1;
   }
 
-  img {
+  .item__img {
     width: 500px;
     height: 500px;
     max-width: 100%;
@@ -112,6 +124,18 @@ const MainContainer = styled.div`
     &:hover {
       cursor: pointer;
       transform: scale(1.01);
+    }
+  }
+  .item__img.active {
+    animation: zoom 1.5s ease;
+    z-index:1;
+  }
+  @keyframes zoom {
+    0% {
+      transform: scale(1, 1);
+    }
+    100% {
+      transform: scale(1.3, 1.3);
     }
   }
 `;
