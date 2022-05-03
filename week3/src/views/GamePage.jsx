@@ -71,7 +71,7 @@ function GamePage() {
     <MainWrapper>
       <h1 className="main__title">눈이 즐거운 이상형 월드컵</h1>
       {!isFinished && <p className="main__round">
-        {round}/{fighterList.length}
+        {round}/{totalRound}
       </p>}
 
       {isFinished ? (
