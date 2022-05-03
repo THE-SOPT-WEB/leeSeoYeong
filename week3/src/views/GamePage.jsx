@@ -7,7 +7,7 @@ import 차은우 from "../img/차은우.jpg";
 import 대결 from "../img/vs.png";
 import ResultPage from "../components/Result.jsx";
 
-const gameInfo = [
+let gameInfo = [
   { name: "버논", src: 버논 },
   { name: "서강준", src: 서강준 },
   { name: "원빈", src: 원빈 },
@@ -24,6 +24,7 @@ function GamePage() {
   let matchWinners = useRef([]);
   
   useEffect(() => {
+    gameInfo.sort(() => Math.random() - 0.5);
     setFighterInfo(gameInfo);
     setFighterList([gameInfo[0], gameInfo[1]]);
   }, []);
