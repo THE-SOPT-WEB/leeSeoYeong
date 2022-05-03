@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 import 왕관 from "../img/crown.png";
-import 폭죽 from "../img/폭죽.gif";
 import Toast from "./Toast.jsx";
 
 function ResultPage({winner}) {
