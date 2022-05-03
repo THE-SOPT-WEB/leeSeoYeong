@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 import 왕관 from "../img/crown.png";
+import 폭죽 from "../img/폭죽.gif";
 import Toast from "./Toast.jsx";
 
 function ResultPage({winner}) {
@@ -32,6 +33,7 @@ function ResultPage({winner}) {
       <ImageWrapper>
         <img src={winner[0].src} alt={winner[0].name} className="item__img" />
       </ImageWrapper>
+      <strong className="winner__name">{winner[0].name}</strong>
       <div className="main__buttons">
         <Link to="/">
           <button type="button">다시하기</button>
@@ -41,6 +43,7 @@ function ResultPage({winner}) {
         </button>
       </div>
       {toastStatus && <Toast message="📨 링크가 공유되었습니다 !" />}
+
     </ResultWrapper>
   );
 }
@@ -101,6 +104,14 @@ const ResultWrapper = styled.div`
         color: #fff;
       }
     }
+  }
+  .winner__name{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    font-size: 24px;
+    text-shadow: 1px 1px 3px #000;
   }
 `;
 
