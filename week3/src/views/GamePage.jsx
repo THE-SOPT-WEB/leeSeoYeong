@@ -4,7 +4,8 @@ import 버논 from "../img/버논.jpg";
 import 서강준 from "../img/서강준.jpg";
 import 원빈 from "../img/원빈.jpg";
 import 차은우 from "../img/차은우.jpg";
-import ResultPage from "./ResultPage.jsx";
+import 대결 from "../img/vs.png";
+import ResultPage from "../components/Result.jsx";
 
 const gameInfo = [
   { name: "버논", src: 버논 },
@@ -20,13 +21,14 @@ function GamePage() {
   const [totalRound, setTotalRound] = useState(2);
   const [isFinished, setIsFinished] = useState(false);
   let matchWinners = useRef([]);
-
+  
   const versusImg = document.querySelector(".versus__img");
-
+  
   useEffect(() => {
     setFighterInfo(gameInfo);
     setFighterList([gameInfo[0], gameInfo[1]]);
   }, []);
+
 
   function handleClick(e) {
     e.target.classList.add("active");
@@ -36,7 +38,7 @@ function GamePage() {
       e.target.classList.remove("active");
       versusImg.classList.remove("hide");
 
-      let target = e.target.alt;
+      let target = e.target.alt; //이미지 태그의 alt: 연예인 이름
       gameInfo.forEach((info) => {
         if (info.name === target) {
           matchWinners.current.push(info);
@@ -76,7 +78,7 @@ function GamePage() {
         <ResultPage winner={fighterInfo[0]} />
       ) : (
         <MainContainer>
-          <img src="src/img/vs.png" alt="대결" className="versus__img" />
+            <img src={ 대결} alt="대결" className="versus__img" />
           {fighterList.map((fighter) => {
             return (
               <article

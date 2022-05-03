@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 import 왕관 from "../img/crown.png";
-import Toast from "../components/Toast.jsx";
+import Toast from "./Toast.jsx";
 
 function ResultPage({winner}) {
   const [toastStatus, setToastStatus] = useState(false);
