@@ -20,9 +20,8 @@ function GamePage() {
   const [round, setRound] = useState(1);
   const [totalRound, setTotalRound] = useState(2);
   const [isFinished, setIsFinished] = useState(false);
+  const [isclick, setIsClick] = useState(false);
   let matchWinners = useRef([]);
-  
-  const versusImg = document.querySelector(".versus__img");
   
   useEffect(() => {
     setFighterInfo(gameInfo);
@@ -32,11 +31,11 @@ function GamePage() {
 
   function handleClick(e) {
     e.target.classList.add("active");
-    versusImg.classList.add("hide");
+    setIsClick(true);
 
     setTimeout(() => {
       e.target.classList.remove("active");
-      versusImg.classList.remove("hide");
+      setIsClick(false);
 
       let target = e.target.alt; //이미지 태그의 alt: 연예인 이름
       gameInfo.forEach((info) => {
@@ -71,14 +70,14 @@ function GamePage() {
     <MainWrapper>
       <h1 className="main__title">눈이 즐거운 이상형 월드컵</h1>
       <p className="main__round">
-        {round}/{totalRound}
+        {round}/{fighterList.length}
       </p>
 
       {isFinished ? (
         <ResultPage winner={fighterInfo[0]} />
       ) : (
         <MainContainer>
-            <img src={ 대결} alt="대결" className="versus__img" />
+            {!isclick && <img src={대결} alt="대결" className="versus__img" />}
           {fighterList.map((fighter) => {
             return (
               <article
