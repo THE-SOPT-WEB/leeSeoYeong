@@ -61,7 +61,7 @@ function GamePage(props) {
 
       setFighterList(fighterList.slice(2));
       matchWinners.current.push(fighter);
-    }, 500);
+    }, 700);
   }
 
   return (
@@ -158,8 +158,11 @@ const MainContainer = styled.div`
     0% {
       transform: scale(1, 1);
     }
+    50%{
+      transform: scale(1.2, 1.2);
+    }
     100% {
-      transform: scale(1.3, 1.3);
+      transform: scale(1.4, 1.4);
     }
   }
 `;
