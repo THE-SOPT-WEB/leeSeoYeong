@@ -65,6 +65,7 @@ const ImageWrapper = styled.div`
 const ResultWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   font-family: "Noto Sans KR", sans-serif;
   width: 100vw;
   height: 100vh;

@@ -1,9 +1,13 @@
 import { React, useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import 버논 from "../img/버논.jpg";
 import 서강준 from "../img/서강준.jpg";
 import 원빈 from "../img/원빈.jpg";
 import 차은우 from "../img/차은우.jpg";
+import 남주혁 from "../img/남주혁.jpg";
+import 로운 from "../img/로운.png";
+import 이수혁 from "../img/이수혁.jpg";
+import 유승호 from "../img/유승호.jpg";
 import 대결 from "../img/vs.png";
 import ResultPage from "../components/Result.jsx";
 
@@ -12,103 +16,120 @@ let gameInfo = [
   { name: "서강준", src: 서강준 },
   { name: "원빈", src: 원빈 },
   { name: "차은우", src: 차은우 },
+  { name: "남주혁", src: 남주혁 },
+  { name: "로운", src: 로운 },
+  { name: "이수혁", src: 이수혁 },
+  { name: "유승호", src: 유승호 },
 ];
 
-function GamePage() {
-  const [fighterInfo, setFighterInfo] = useState([]);
-  const [fighterList, setFighterList] = useState([]);
-  const [round, setRound] = useState(1);
-  const [totalRound, setTotalRound] = useState(2);
-  const [isFinished, setIsFinished] = useState(false);
-  const [isclick, setIsClick] = useState(false);
-  let matchWinners = useRef([]);
-  
+function GamePage(props) {
+  const [fighterList, setFighterList] = useState([]); //대결할 모든 후보자 저장
+  const [isFinished, setIsFinished] = useState(false); //게임 끝 여부 저장
+  const [isclick, setisclick] = useState(false); //클릭 여부 저장
+  const [winner, setwinner] = useState(""); //둘 중 한 명 클릭 시 승자 저장
+
+  let matchWinners = useRef([]); //해당 라운드 승리자 저장 배열
+  let round = useRef(props.round / 2);
+
   useEffect(() => {
-    gameInfo.sort(() => Math.random() - 0.5);
-    setFighterInfo(gameInfo);
-    setFighterList([gameInfo[0], gameInfo[1]]);
+    gameInfo.sort(() => Math.random() - 0.5); //배열 랜덤 정렬
+    setFighterList(gameInfo); //대결자 초기화
   }, []);
 
+  useEffect(() => {
+    if (fighterList.length === 0) {
+      if (matchWinners.current.length === 1) {
+        //마지막 라운드까지 모두 끝난 경우
+        setIsFinished(true);
+      } else if (
+        matchWinners.current.length === props.round / 2 ||
+        matchWinners.current.length === props.round / 4
+      ) {
+        setFighterList(matchWinners.current);
+        round.current /= 2;
+        matchWinners.current = [];
+      }
+    }
+  }, [fighterList]);
 
-  function handleClick(e) {
-    e.target.classList.add("active");
-    setIsClick(true);
+  function handleClick(fighter) {
+    setisclick(true);
 
     setTimeout(() => {
-      e.target.classList.remove("active");
-      setIsClick(false);
+      setisclick(false);
+      setwinner("");
 
-      let target = e.target.alt; //이미지 태그의 alt: 연예인 이름
-      gameInfo.forEach((info) => {
-        if (info.name === target) {
-          matchWinners.current.push(info);
-        }
-      });
-      if (totalRound === 1 && matchWinners.current.length === 1) {
-        //모든 라운드가 끝난 경우
-        setIsFinished(true);
-        setFighterInfo(matchWinners.current[0]);
-      }
-      if (fighterInfo.length === 1) {
-        //준결승 2번째 클릭 시-> 결승 진출
-        setRound(1);
-        setTotalRound(1);
-        setFighterInfo([matchWinners.current]);
-        setFighterList([matchWinners.current[0], matchWinners.current[1]]);
-
-        matchWinners.current = [];
-      } else {
-        //준결승 1번째 클릭 시 -> 2번째 후보들 출전
-        setFighterInfo([fighterInfo.slice(2)]);
-        setFighterList([gameInfo[2], gameInfo[3]]);
-
-        setRound((prev) => prev + 1);
-      }
-    }, 1500);
+      setFighterList(fighterList.slice(2));
+      matchWinners.current.push(fighter);
+    }, 500);
   }
 
   return (
     <MainWrapper>
       <h1 className="main__title">눈이 즐거운 이상형 월드컵</h1>
-      {!isFinished && <p className="main__round">
-        {round}/{totalRound}
-      </p>}
+      {!isFinished && (
+        <p className="main__round">
+          {matchWinners.current.length + 1}/{round.current}
+        </p>
+      )}
 
       {isFinished ? (
-        <ResultPage winner={fighterInfo[0]} />
+        <ResultPage winner={matchWinners.current} />
       ) : (
-        <MainContainer>
-            {!isclick && <img src={대결} alt="대결" className="versus__img" />}
-          {fighterList.map((fighter) => {
-            return (
-              <article
-                onClick={handleClick}
-                className="cont__item"
-                key={fighter.name}
-              >
-                <p className="item__name">{fighter.name}</p>
-                <img
-                  src={fighter.src}
-                  alt={fighter.name}
-                  className="item__img"
-                />
-              </article>
-            );
+        <MainContainer isclick={isclick}>
+          {!isclick && <img src={대결} alt="대결" className="versus__img" />}
+          {fighterList.map((fighter, idx) => {
+            if (idx < 2) {
+              return (
+                <article
+                  onClick={() => {
+                    setwinner(fighter);
+                    handleClick(fighter);
+                  }}
+                  className="cont__item"
+                  key={fighter.name}
+                >
+                  <p className="item__name">{fighter.name}</p>
+                  <WinnerImage
+                    src={fighter.src}
+                    alt={fighter.name}
+                    isclick={winner.name === fighter.name}
+                  />
+                </article>
+              );
+            }
           })}
         </MainContainer>
       )}
     </MainWrapper>
   );
 }
+const WinnerImage = styled.img`
+  width: 500px;
+  height: 500px;
+  max-width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0px 0px 3px #fff;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.01);
+  }
+  src: ${(props) => props.src || null};
+  alt: ${(props) => props.name || null};
+  ${(props) =>
+    props.isclick &&
+    css`
+      animation: zoom 1.5s ease;
+      z-index: 1;
+    `}
+`;
 
 const MainContainer = styled.div`
   display: flex;
   margin: 0 auto;
   gap: 5px;
-
-  .hide {
-    display: none;
-  }
 
   .versus__img {
     position: absolute;
@@ -130,24 +151,6 @@ const MainContainer = styled.div`
     font-size: 24px;
     color: #fff;
     text-shadow: 1px 1px 3px #000;
-    z-index: 1;
-  }
-
-  .item__img {
-    width: 500px;
-    height: 500px;
-    max-width: 100%;
-    object-fit: cover;
-    border-radius: 5px;
-    box-shadow: 0px 0px 3px #fff;
-
-    &:hover {
-      cursor: pointer;
-      transform: scale(1.01);
-    }
-  }
-  .item__img.active {
-    animation: zoom 1.5s ease;
     z-index: 1;
   }
 
