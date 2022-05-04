@@ -5,9 +5,9 @@ import styled from "styled-components";
 import 왕관 from "../img/crown.png";
 import Toast from "./Toast.jsx";
 
-function ResultPage({winner}) {
+function ResultPage({ winner }) {
   const [toastStatus, setToastStatus] = useState(false);
-  
+
   function handleShareButton() {
     setToastStatus(true);
     const text = document.createElement("textarea");
@@ -33,16 +33,19 @@ function ResultPage({winner}) {
         <img src={winner[0].src} alt={winner[0].name} className="item__img" />
       </ImageWrapper>
       <strong className="winner__name">{winner[0].name}</strong>
-      <div className="main__buttons">
-        <Link to="/">
-          <button type="button">다시하기</button>
+      <MainButtons>
+        <Link to="/" className="restart__button">
+          다시하기
         </Link>
-        <button type="button" onClick={handleShareButton}>
+        <button
+          type="button"
+          onClick={handleShareButton}
+          className="share__button"
+        >
           공유하기
         </button>
-      </div>
+      </MainButtons>
       {toastStatus && <Toast message="📨 링크가 공유되었습니다 !" />}
-
     </ResultWrapper>
   );
 }
@@ -53,7 +56,7 @@ const ImageWrapper = styled.div`
   gap: 5px;
 
   img {
-    width:480px;
+    width: 480px;
     height: 480px;
     max-width: 100%;
     object-fit: cover;
@@ -62,11 +65,43 @@ const ImageWrapper = styled.div`
   }
 `;
 
+const MainButtons = styled.button`
+  display: flex;
+  gap: 20px;
+  padding-top: 30px;
+  margin: 0 auto;
+  background: none;
+  border: none;
+
+  .restart__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .restart__button,
+  .share__button {
+    width: 130px;
+    height: 40px;
+    border: none;
+    background-color: #fff;
+    color: #000;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 25px;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #828282;
+      color: #fff;
+    }
+  }
+`;
+
 const ResultWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-family: "Noto Sans KR", sans-serif;
   width: 100vw;
   height: 100vh;
   color: #fff;
@@ -81,35 +116,11 @@ const ResultWrapper = styled.div`
     left: 50%;
     transform: translateX(-50%);
   }
-
-  & > .main__buttons {
-    display: flex;
-    gap: 20px;
-    padding-top: 30px;
-    margin: 0 auto;
-
-    button {
-      width: 130px;
-      height: 40px;
-      border: none;
-      background-color: #fff;
-      color: #000;
-      font-size: 20px;
-      font-weight: 700;
-      border-radius: 25px;
-
-      &:hover {
-        cursor: pointer;
-        background-color: #828282;
-        color: #fff;
-      }
-    }
-  }
-  .winner__name{
+  .winner__name {
     position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-size: 24px;
     text-shadow: 1px 1px 3px #000;
   }

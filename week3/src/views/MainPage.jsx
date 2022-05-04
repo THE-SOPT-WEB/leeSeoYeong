@@ -6,8 +6,8 @@ function MainPage() {
   return (
     <MainWrapper>
       <h1 className="main__title">눈이 즐거운 이상형 월드컵</h1>
-      <Link to="/game">
-        <button type="button">시작하기</button>
+      <Link to="/game" className="start__button">
+        시작하기
       </Link>
     </MainWrapper>
   );
@@ -23,17 +23,14 @@ const MainWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  * {
-    font-family: "Noto Sans KR", sans-serif;
-  }
-
   .main__title {
     font-size: 36px;
     text-align: center;
     color: #fff;
   }
 
-  button {
+  .start__button {
+    display:flex;
     width: 200px;
     height: 50px;
     font-size: 24px;
@@ -41,6 +38,9 @@ const MainWrapper = styled.div`
     color: #fff;
     border: 2px solid #fff;
     border-radius: 20px;
+    text-decoration:none;
+    justify-content: center;
+    align-items: center;
 
     &:hover {
       cursor: pointer;

@@ -1,16 +1,19 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import MainPage from "./views/MainPage.jsx";
-import GamePage from "./views/GamePage.jsx";
+import GlobalStyles from "./GlobalStyle";
+import MainPage from "./views/MainPage";
+import GamePage from "./views/GamePage";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/game" element={<GamePage round="8"/>} />
-      </Routes>
-    </Router>
+    <>
+      <GlobalStyles />
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/game" element={<GamePage />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

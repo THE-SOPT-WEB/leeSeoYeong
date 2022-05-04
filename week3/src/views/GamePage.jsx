@@ -11,7 +11,8 @@ import 유승호 from "../img/유승호.jpg";
 import 대결 from "../img/vs.png";
 import ResultPage from "../components/Result.jsx";
 
-let gameInfo = [
+const ROUND = 8;
+const gameInfo = [
   { name: "버논", src: 버논 },
   { name: "서강준", src: 서강준 },
   { name: "원빈", src: 원빈 },
@@ -22,14 +23,14 @@ let gameInfo = [
   { name: "유승호", src: 유승호 },
 ];
 
-function GamePage(props) {
+function GamePage() {
   const [fighterList, setFighterList] = useState([]); //대결할 모든 후보자 저장
   const [isFinished, setIsFinished] = useState(false); //게임 끝 여부 저장
   const [isclick, setisclick] = useState(false); //클릭 여부 저장
   const [winner, setwinner] = useState(""); //둘 중 한 명 클릭 시 승자 저장
 
   let matchWinners = useRef([]); //해당 라운드 승리자 저장 배열
-  let round = useRef(props.round / 2);
+  let round = useRef(ROUND / 2);
 
   useEffect(() => {
     gameInfo.sort(() => Math.random() - 0.5); //배열 랜덤 정렬
@@ -42,8 +43,8 @@ function GamePage(props) {
         //마지막 라운드까지 모두 끝난 경우
         setIsFinished(true);
       } else if (
-        matchWinners.current.length === props.round / 2 ||
-        matchWinners.current.length === props.round / 4
+        matchWinners.current.length === ROUND / 2 ||
+        matchWinners.current.length === ROUND / 4
       ) {
         setFighterList(matchWinners.current);
         round.current /= 2;
@@ -91,8 +92,8 @@ function GamePage(props) {
                 >
                   <p className="item__name">{fighter.name}</p>
                   <WinnerImage
-                    src={fighter.src}
-                    alt={fighter.name}
+                    src={fighter.src || null}
+                    alt={fighter.name || null}
                     isclick={winner.name === fighter.name}
                   />
                 </article>
@@ -116,8 +117,6 @@ const WinnerImage = styled.img`
     cursor: pointer;
     transform: scale(1.01);
   }
-  src: ${(props) => props.src || null};
-  alt: ${(props) => props.name || null};
   ${(props) =>
     props.isclick &&
     css`
@@ -158,7 +157,7 @@ const MainContainer = styled.div`
     0% {
       transform: scale(1, 1);
     }
-    50%{
+    50% {
       transform: scale(1.2, 1.2);
     }
     100% {
@@ -170,7 +169,6 @@ const MainContainer = styled.div`
 const MainWrapper = styled.main`
   display: flex;
   flex-direction: column;
-  font-family: "Noto Sans KR", sans-serif;
   width: 100vw;
   height: 100vh;
   color: #fff;
