@@ -1,8 +1,87 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useState, useEffect, useRef } from "react";
 
 function MainPage() {
-  const [result, setResult] = useState([1]);
+  const [result, setResult] = useState([]);
+  const [isClicked, setIsClicked] = useState(false);
+  const location = useRef("");
+
+  useEffect(() => {
+    setResult([]);
+  }, []);
+
+  function handleSearchButton() {
+    if (!isClicked) {
+      //입력 지역 근처 검색
+      console.log(location.current.value);
+      getDataNearByTown(location.current.value);
+    } else {
+      //사용자 현 위치 검색
+      getDataNearByUser();
+    }
+  }
+
+  async function getDataNearByUser() {
+    const { x, y } = await getUserLocation();
+
+    const res = await axios
+      .get("https://dapi.kakao.com//v2/local/search/keyword", {
+        headers: {
+          Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
+        },
+        params: {
+          query: "맥주",
+          x: x,
+          y: y,
+          radius: 1000,
+        },
+      })
+      .then(({ data }) => setResult(data.documents));
+  }
+
+  async function getDataNearByTown(location) {
+    const res = await axios
+      .get("https://dapi.kakao.com//v2/local/search/keyword", {
+        headers: {
+          Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
+        },
+        params: {
+          query: `${location} 맥주`,
+          radius: 1000,
+        },
+      })
+      .then((response) => console.log(response.data));
+    console.log("우리 동네 근처");
+  }
+
+  const getLocation = (errHandler) => {
+    if ("geolocation" in navigator) {
+      return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const {
+              coords: { latitude: y, longitude: x },
+            } = position;
+            resolve({ x, y });
+          },
+          (e) => {
+            alert("HTTPS 연결을 확인해주세요.");
+            errHandler && errHandler();
+          }
+        );
+      });
+    }
+
+    return { x: 37.5426165, y: 126.962994 };
+  };
+
+  // 유저의 현재 위치 가져오기
+  async function getUserLocation() {
+    const res = await getLocation();
+    return res;
+  }
+
   return (
     <MainWrapper>
       <MainContainer>
@@ -13,12 +92,19 @@ function MainPage() {
         <SearchSection>
           <SearchBox>
             <strong>현재 위치에서 검색하기</strong>
-            <input type="checkbox" />
+            <input type="checkbox" onChange={() => setIsClicked(!isClicked)} />
           </SearchBox>
           <SearchByMyTownBox>
             <strong>🔻우리 동네 근처로 검색하기🔻</strong>
-            <SearchInput type="text" placeholder="지역을 입력해주세요." />
-            <SearchButton type="button">검색하기</SearchButton>
+            <SearchInput
+              type="text"
+              placeholder="지역을 입력해주세요."
+              ref={location}
+              disabled={isClicked}
+            />
+            <SearchButton type="button" onClick={handleSearchButton}>
+              검색하기
+            </SearchButton>
           </SearchByMyTownBox>
         </SearchSection>
 
@@ -27,20 +113,24 @@ function MainPage() {
         ) : (
           <ResultSection>
             <CardWrapper>
-              <Card>
-                <CardTitle>크라운호프</CardTitle>
-                <InfoBox>
-                  <p className="info__tel">010-5661-7907</p>
-                  <p>청파동1가 23-456</p>
-                </InfoBox>
-              </Card>
-              <Card>
-                <CardTitle>원래는 치킨집을 하려고 했다</CardTitle>
-                <InfoBox>
-                  <p className="info__tel">02-8643-7213</p>
-                  <p className="info__address">청파동3가 456-78 청송빌딩 1층</p>
-                </InfoBox>
-              </Card>
+              {result &&
+                result.map((res, idx) => {
+                  return (
+                    <Card key={idx}>
+                      <CardTitle href={res.place_url || null}>
+                        {res.place_name}
+                      </CardTitle>
+                      <InfoBox>
+                        <p className="info__tel">{res.phone || "번호 없음"}</p>
+                        {res.distance ? (
+                          <p>{res.distance}m</p>
+                        ) : (
+                          <p>{res.address_name}</p>
+                        )}
+                      </InfoBox>
+                    </Card>
+                  );
+                })}
             </CardWrapper>
           </ResultSection>
         )}
@@ -75,8 +165,8 @@ const MainContainer = styled.div`
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-size:22px;
-    font-weight:700;
+    font-size: 22px;
+    font-weight: 700;
   }
 `;
 
@@ -155,11 +245,12 @@ const Card = styled.li`
   border-radius: 10px;
 `;
 
-const CardTitle = styled.strong`
+const CardTitle = styled.a`
   height: fit-content;
   font-size: 18px;
   font-weight: 700;
   padding-left: 20px;
+  cursor: pointer;
 `;
 
 const InfoBox = styled.div`
