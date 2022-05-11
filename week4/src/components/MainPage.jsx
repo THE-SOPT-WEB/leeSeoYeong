@@ -3,18 +3,17 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 
 function MainPage() {
-  const [result, setResult] = useState([]);
+  const [beerStores, setBeerStores] = useState([]); //가게 정보 배열
   const [isClicked, setIsClicked] = useState(false);
   const location = useRef("");
 
   useEffect(() => {
-    setResult([]);
+    setBeerStores([]); //가게 정보 담은 배열 초기화
   }, []);
 
   function handleSearchButton() {
     if (!isClicked) {
       //입력 지역 근처 검색
-      console.log(location.current.value);
       getDataNearByTown(location.current.value);
     } else {
       //사용자 현 위치 검색
@@ -23,7 +22,7 @@ function MainPage() {
   }
 
   async function getDataNearByUser() {
-    const { x, y } = await getUserLocation();
+    const { x, y } = await getLocation();
 
     const res = await axios
       .get("https://dapi.kakao.com//v2/local/search/keyword", {
@@ -37,7 +36,7 @@ function MainPage() {
           radius: 1000,
         },
       })
-      .then(({ data }) => setResult(data.documents));
+      .then(({ data }) => setBeerStores(data.documents));
   }
 
   async function getDataNearByTown(location) {
@@ -51,8 +50,7 @@ function MainPage() {
           radius: 1000,
         },
       })
-      .then((response) => console.log(response.data));
-    console.log("우리 동네 근처");
+      .then(({ data}) => setBeerStores(data.documents));
   }
 
   const getLocation = (errHandler) => {
@@ -76,17 +74,11 @@ function MainPage() {
     return { x: 37.5426165, y: 126.962994 };
   };
 
-  // 유저의 현재 위치 가져오기
-  async function getUserLocation() {
-    const res = await getLocation();
-    return res;
-  }
-
   return (
     <MainWrapper>
       <MainContainer>
         <TitleSection>
-          <h1>우리 동네 맥주집</h1>
+          <h1>맥주 어디서 마실래?</h1>
         </TitleSection>
 
         <SearchSection>
@@ -95,7 +87,7 @@ function MainPage() {
             <input type="checkbox" onChange={() => setIsClicked(!isClicked)} />
           </SearchBox>
           <SearchByMyTownBox>
-            <strong>🔻우리 동네 근처로 검색하기🔻</strong>
+            <strong>🔻특정 장소 주변에서 검색하기🔻</strong>
             <SearchInput
               type="text"
               placeholder="지역을 입력해주세요."
@@ -108,24 +100,24 @@ function MainPage() {
           </SearchByMyTownBox>
         </SearchSection>
 
-        {!result.length ? (
+        {!beerStores.length ? (
           <div className="empty__result">결과가 없습니다</div>
         ) : (
           <ResultSection>
             <CardWrapper>
-              {result &&
-                result.map((res, idx) => {
+              {beerStores &&
+                beerStores.map((beerstore, idx) => {
                   return (
                     <Card key={idx}>
-                      <CardTitle href={res.place_url || null}>
-                        {res.place_name}
+                      <CardTitle href={beerstore.place_url || null}>
+                        {beerstore.place_name}
                       </CardTitle>
                       <InfoBox>
-                        <p className="info__tel">{res.phone || "번호 없음"}</p>
-                        {res.distance ? (
-                          <p>{res.distance}m</p>
+                        <p className="info__tel">{beerstore.phone || "번호 없음"}</p>
+                        {beerstore.distance ? (
+                          <p>{beerstore.distance}m</p>
                         ) : (
-                          <p>{res.address_name}</p>
+                          <p>{beerstore.address_name}</p>
                         )}
                       </InfoBox>
                     </Card>
@@ -271,7 +263,6 @@ const InfoBox = styled.div`
     color: #fff;
     font-size: 12px;
     font-weight: 700;
-    cursor: pointer;
   }
 
   & > .info__address {
