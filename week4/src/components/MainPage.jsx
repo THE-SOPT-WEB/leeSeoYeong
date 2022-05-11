@@ -6,7 +6,6 @@ import StoreDataCard from "./StoreDataCard";
 function MainPage() {
   const [beerStores, setBeerStores] = useState([]); //가게 정보 배열
   const [isChecked, setIsChecked] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const location = useRef("");
 
@@ -23,7 +22,7 @@ function MainPage() {
 
   function handleSearchButton() {
     setIsLoading(true);
-    
+
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -119,7 +118,6 @@ function MainPage() {
 
   return (
     <>
-      {  isClicked && !location.current.value && <Modal contents="지역을 입력해주세요."/>}
     <MainWrapper>
       <MainContainer>
         <TitleSection>
