@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import axios from "axios";
 import StoreDataCard from "./StoreDataCard";
 
 function MainPage() {
   const [beerStores, setBeerStores] = useState([]); //가게 정보 배열
+  const [isChecked, setIsChecked] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const location = useRef("");
@@ -14,12 +15,20 @@ function MainPage() {
     setBeerStores([]); //가게 정보 담은 배열 초기화
   }, []);
 
+  useEffect(() => {
+    if (isChecked) {
+      location.current.value = "";
+    }
+  }, [isChecked]);
+
   function handleSearchButton() {
+    setIsLoading(true);
+    
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
 
-    if (!isClicked) {
+    if (!isChecked) {
       //입력 지역 근처 검색
       getDataNearByTown(location.current.value);
     } else {
@@ -43,21 +52,49 @@ function MainPage() {
           radius: 1000,
         },
       })
-      .then(({ data }) => setBeerStores(data.documents));
+      .then(({ data }) => {
+        data.documents.sort((a, b) => a.distance - b.distance);
+        setBeerStores(data.documents);
+      });
   }
 
   async function getDataNearByTown(location) {
+    if (location) {
+      const { x, y } = await getLocationCoords(location);
+
+      const res = await axios
+        .get("https://dapi.kakao.com//v2/local/search/keyword", {
+          headers: {
+            Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
+          },
+          params: {
+            query: `${location} 맥주`,
+            x: x,
+            y: y,
+            radius: 1000,
+          },
+        })
+        .then(({ data }) => {
+          data.documents.sort((a, b) => a.distance - b.distance); //거리순 정렬
+          setBeerStores(data.documents);
+        });
+    }
+  }
+
+  async function getLocationCoords(location) {
+    //사용자가 입력한 지역 좌표얻기
+    let coords = {};
     const res = await axios
       .get("https://dapi.kakao.com//v2/local/search/keyword", {
         headers: {
           Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
         },
         params: {
-          query: `${location} 맥주`,
-          radius: 1000,
+          query: `${location}`,
         },
       })
-      .then(({ data }) => setBeerStores(data.documents));
+      .then(({ data }) => (coords = data.documents[0]));
+    return coords;
   }
 
   const getLocation = (errHandler) => {
@@ -81,6 +118,8 @@ function MainPage() {
   };
 
   return (
+    <>
+      {  isClicked && !location.current.value && <Modal contents="지역을 입력해주세요."/>}
     <MainWrapper>
       <MainContainer>
         <TitleSection>
@@ -90,7 +129,7 @@ function MainPage() {
         <SearchSection>
           <SearchBox>
             <strong>현재 위치에서 검색하기</strong>
-            <input type="checkbox" onChange={() => setIsClicked(!isClicked)} />
+            <input type="checkbox" onChange={() => setIsChecked(!isChecked)} />
           </SearchBox>
           <SearchByMyTownBox>
             <strong>🔻특정 장소 주변에서 검색하기🔻</strong>
@@ -98,7 +137,7 @@ function MainPage() {
               type="text"
               placeholder="지역을 입력해주세요."
               ref={location}
-              disabled={isClicked}
+              disabled={isChecked}
             />
             <SearchButton type="button" onClick={handleSearchButton}>
               검색하기
@@ -111,12 +150,16 @@ function MainPage() {
         ) : (
           <ResultSection>
             <CardWrapper>
-              <StoreDataCard isLoading={isLoading} data={beerStores} />
+              <StoreDataCard
+                isLoading={isLoading}
+                data={beerStores}
+                isChecked={location.current.value}
+              />
             </CardWrapper>
           </ResultSection>
         )}
       </MainContainer>
-    </MainWrapper>
+    </MainWrapper></>
   );
 }
 

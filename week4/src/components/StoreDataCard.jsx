@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Skeleton from "./Skeleton";
 
-function StoreDataCard({ isLoading, data }) {
+function StoreDataCard({ isLoading, data, isChecked }) {
   return (
     <>
       {isLoading
@@ -17,7 +17,7 @@ function StoreDataCard({ isLoading, data }) {
                 </CardTitle>
                 <InfoBox>
                   <p className="info__tel">{beerstore.phone || "번호 없음"}</p>
-                  {beerstore.distance ? (
+                  {!isChecked ? (
                     <p className="info__address">{beerstore.distance}m</p>
                   ) : (
                     <p className="info__address">{beerstore.address_name}</p>
