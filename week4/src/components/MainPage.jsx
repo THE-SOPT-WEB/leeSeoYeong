@@ -1,17 +1,24 @@
+import { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import StoreDataCard from "./StoreDataCard";
 
 function MainPage() {
   const [beerStores, setBeerStores] = useState([]); //가게 정보 배열
   const [isClicked, setIsClicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const location = useRef("");
 
   useEffect(() => {
+    setIsLoading(true); //로딩중 초기화
     setBeerStores([]); //가게 정보 담은 배열 초기화
   }, []);
 
   function handleSearchButton() {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
     if (!isClicked) {
       //입력 지역 근처 검색
       getDataNearByTown(location.current.value);
@@ -70,7 +77,6 @@ function MainPage() {
         );
       });
     }
-
     return { x: 37.5426165, y: 126.962994 };
   };
 
@@ -105,26 +111,7 @@ function MainPage() {
         ) : (
           <ResultSection>
             <CardWrapper>
-              {beerStores &&
-                beerStores.map((beerstore, idx) => {
-                  return (
-                    <Card key={idx} isClicked={isClicked}>
-                      <CardTitle href={beerstore.place_url || null}>
-                        {beerstore.place_name}
-                      </CardTitle>
-                      <InfoBox>
-                        <p className="info__tel">
-                          {beerstore.phone || "번호 없음"}
-                        </p>
-                        {beerstore.distance ? (
-                          <p className="info__address">{beerstore.distance}m</p>
-                        ) : (
-                          <p className="info__address">{beerstore.address_name}</p>
-                        )}
-                      </InfoBox>
-                    </Card>
-                  );
-                })}
+              <StoreDataCard isLoading={isLoading} data={beerStores} />
             </CardWrapper>
           </ResultSection>
         )}
@@ -225,53 +212,6 @@ const CardWrapper = styled.ul`
   flex-direction: column;
   gap: 10px;
   width: 90%;
-`;
-
-const Card = styled.li`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  height: 80px;
-  font-size: 14px;
-  background-color: #fff;
-  color: #000;
-  border-radius: 10px;
-`;
-
-const CardTitle = styled.a`
-  height: fit-content;
-  font-size: 18px;
-  font-weight: 700;
-  padding-left: 20px;
-  cursor: pointer;
-`;
-
-const InfoBox = styled.div`
-  display: flex;
-  gap: 20px;
-  width: 100%;
-  font-weight: 400;
-  justify-content: space-between;
-
-  & > .info__tel {
-    width: 100px;
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 20px;
-    border-radius: 15px;
-    background-color: #828282;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  & > .info__address {
-    max-width:150px;
-    padding-right: 10px;
-  }
 `;
 
 export default MainPage;
