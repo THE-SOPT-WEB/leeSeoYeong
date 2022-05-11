@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 
@@ -50,7 +50,7 @@ function MainPage() {
           radius: 1000,
         },
       })
-      .then(({ data}) => setBeerStores(data.documents));
+      .then(({ data }) => setBeerStores(data.documents));
   }
 
   const getLocation = (errHandler) => {
@@ -108,16 +108,18 @@ function MainPage() {
               {beerStores &&
                 beerStores.map((beerstore, idx) => {
                   return (
-                    <Card key={idx}>
+                    <Card key={idx} isClicked={isClicked}>
                       <CardTitle href={beerstore.place_url || null}>
                         {beerstore.place_name}
                       </CardTitle>
                       <InfoBox>
-                        <p className="info__tel">{beerstore.phone || "번호 없음"}</p>
+                        <p className="info__tel">
+                          {beerstore.phone || "번호 없음"}
+                        </p>
                         {beerstore.distance ? (
-                          <p>{beerstore.distance}m</p>
+                          <p className="info__address">{beerstore.distance}m</p>
                         ) : (
-                          <p>{beerstore.address_name}</p>
+                          <p className="info__address">{beerstore.address_name}</p>
                         )}
                       </InfoBox>
                     </Card>
@@ -250,6 +252,7 @@ const InfoBox = styled.div`
   gap: 20px;
   width: 100%;
   font-weight: 400;
+  justify-content: space-between;
 
   & > .info__tel {
     width: 100px;
@@ -266,8 +269,8 @@ const InfoBox = styled.div`
   }
 
   & > .info__address {
-    width: 150px;
-    padding-right: 3px;
+    max-width:150px;
+    padding-right: 10px;
   }
 `;
 
