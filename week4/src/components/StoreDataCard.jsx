@@ -9,18 +9,18 @@ function StoreDataCard({ isLoading, data, isChecked }) {
             return <Skeleton key={idx} />;
           })
         : data &&
-          data.map((beerstore, idx) => {
+        data.map(({ place_url,place_name,phone,distance,address_name}, idx) => {
             return (
               <Card key={idx}>
-                <CardTitle href={beerstore.place_url || null}>
-                  {beerstore.place_name}
+                <CardTitle href={place_url || null}>
+                  {place_name}
                 </CardTitle>
                 <InfoBox>
-                  <p className="info__tel">{beerstore.phone || "번호 없음"}</p>
+                  <p className="info__tel">{phone || "번호 없음"}</p>
                   {!isChecked ? (
-                    <p className="info__address">{beerstore.distance}m</p>
+                    <p className="info__address">{distance}m</p>
                   ) : (
-                    <p className="info__address">{beerstore.address_name}</p>
+                    <p className="info__address">{address_name}</p>
                   )}
                 </InfoBox>
               </Card>

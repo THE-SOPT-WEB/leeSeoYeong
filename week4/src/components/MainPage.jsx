@@ -2,32 +2,27 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import StoreDataCard from "./StoreDataCard";
+import SearchStore from "./SearchStore";
 
 function MainPage() {
   const [beerStores, setBeerStores] = useState([]); //가게 정보 배열
-  const [isChecked, setIsChecked] = useState(false);
+  const [isButtonChecked, setIsButtonChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const location = useRef("");
 
   useEffect(() => {
-    setIsLoading(true); //로딩중 초기화
     setBeerStores([]); //가게 정보 담은 배열 초기화
   }, []);
 
   useEffect(() => {
-    if (isChecked) {
+    if (isButtonChecked) {
       location.current.value = "";
     }
-  }, [isChecked]);
+  }, [isButtonChecked]);
 
   function handleSearchButton() {
     setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    if (!isChecked) {
+    if (!isButtonChecked) {
       //입력 지역 근처 검색
       getDataNearByTown(location.current.value);
     } else {
@@ -39,7 +34,7 @@ function MainPage() {
   async function getDataNearByUser() {
     const { x, y } = await getLocation();
 
-    const res = await axios
+    const { data } = await axios
       .get("https://dapi.kakao.com//v2/local/search/keyword", {
         headers: {
           Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
@@ -51,17 +46,16 @@ function MainPage() {
           radius: 1000,
         },
       })
-      .then(({ data }) => {
-        data.documents.sort((a, b) => a.distance - b.distance);
-        setBeerStores(data.documents);
-      });
+      .then(setIsLoading(false));
+    data.documents.sort((a, b) => a.distance - b.distance);
+    setBeerStores(data.documents);
   }
 
   async function getDataNearByTown(location) {
     if (location) {
       const { x, y } = await getLocationCoords(location);
 
-      const res = await axios
+      const { data } = await axios
         .get("https://dapi.kakao.com//v2/local/search/keyword", {
           headers: {
             Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
@@ -73,26 +67,27 @@ function MainPage() {
             radius: 1000,
           },
         })
-        .then(({ data }) => {
-          data.documents.sort((a, b) => a.distance - b.distance); //거리순 정렬
-          setBeerStores(data.documents);
-        });
+        .then(setIsLoading(false));
+      data.documents.sort((a, b) => a.distance - b.distance); //거리순 정렬
+      setBeerStores(data.documents);
     }
   }
 
   async function getLocationCoords(location) {
     //사용자가 입력한 지역 좌표얻기
     let coords = {};
-    const res = await axios
-      .get("https://dapi.kakao.com//v2/local/search/keyword", {
+    const { data } = await axios.get(
+      "https://dapi.kakao.com//v2/local/search/keyword",
+      {
         headers: {
           Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
         },
         params: {
-          query: `${location}`,
+          query: location,
         },
-      })
-      .then(({ data }) => (coords = data.documents[0]));
+      }
+    );
+    coords = data.documents[0];
     return coords;
   }
 
@@ -118,46 +113,33 @@ function MainPage() {
 
   return (
     <>
-    <MainWrapper>
-      <MainContainer>
-        <TitleSection>
-          <h1>맥주 어디서 마실래?</h1>
-        </TitleSection>
+      <MainWrapper>
+        <MainContainer>
+          <TitleSection>맥주 어디서 마실래?</TitleSection>
 
-        <SearchSection>
-          <SearchBox>
-            <strong>현재 위치에서 검색하기</strong>
-            <input type="checkbox" onChange={() => setIsChecked(!isChecked)} />
-          </SearchBox>
-          <SearchByMyTownBox>
-            <strong>🔻특정 장소 주변에서 검색하기🔻</strong>
-            <SearchInput
-              type="text"
-              placeholder="지역을 입력해주세요."
-              ref={location}
-              disabled={isChecked}
-            />
-            <SearchButton type="button" onClick={handleSearchButton}>
-              검색하기
-            </SearchButton>
-          </SearchByMyTownBox>
-        </SearchSection>
+          <SearchStore
+            onChange={() => setIsButtonChecked(!isButtonChecked)}
+            location={location}
+            isButtonChecked={isButtonChecked}
+            handleSearchButton={handleSearchButton}
+          />
 
-        {!beerStores.length ? (
-          <div className="empty__result">결과가 없습니다</div>
-        ) : (
-          <ResultSection>
-            <CardWrapper>
-              <StoreDataCard
-                isLoading={isLoading}
-                data={beerStores}
-                isChecked={location.current.value}
-              />
-            </CardWrapper>
-          </ResultSection>
-        )}
-      </MainContainer>
-    </MainWrapper></>
+          {!beerStores.length ? (
+            <div className="empty__result">결과가 없습니다</div>
+          ) : (
+            <ResultSection>
+              <CardWrapper>
+                <StoreDataCard
+                  isLoading={isLoading}
+                  data={beerStores}
+                  isChecked={location.current.value}
+                />
+              </CardWrapper>
+            </ResultSection>
+          )}
+        </MainContainer>
+      </MainWrapper>
+    </>
   );
 }
 
@@ -199,46 +181,6 @@ const TitleSection = styled(FlexBox)`
   color: #ffd724;
   width: 100%;
   border-bottom: 2px solid #fff;
-`;
-
-const SearchSection = styled(FlexBox)`
-  padding: 10px 0;
-  gap: 15px;
-  font-size: 22px;
-  color: #fff;
-  border-bottom: 2px solid #fff;
-  width: 100%;
-`;
-
-const SearchBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-`;
-
-const SearchByMyTownBox = styled(FlexBox)`
-  gap: 15px;
-`;
-
-const SearchInput = styled.input`
-  border-radius: 5px;
-`;
-
-const SearchButton = styled.button`
-  border: none;
-  border-radius: 10px;
-  background-color: #fff;
-  color: #000;
-  font-weight: 700;
-
-  width: 70px;
-  height: 25px;
-
-  &:hover {
-    background-color: #828282;
-    color: #fff;
-  }
 `;
 
 const ResultSection = styled(FlexBox)`
