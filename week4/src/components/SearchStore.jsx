@@ -1,29 +1,31 @@
 import styled from "styled-components";
 
-function SearchStore({
-  onChange,
-  location,
-  isChecked,
-  handleSearchButton,
-}) {
+function SearchStore({ onChange, location, isChecked, handleSearchButton }) {
+  const onEnterPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearchButton();
+    }
+  };
+
   return (
     <SearchSection>
-      <SearchBox>
+      <SearchWrapper>
         <strong>현재 위치에서 검색하기</strong>
         <input type="checkbox" onChange={onChange} />
-      </SearchBox>
-      <SearchByMyTownBox>
+      </SearchWrapper>
+      <SearchByMyTownWrapper>
         <strong>🔻특정 장소 주변에서 검색하기🔻</strong>
         <SearchInput
           type="text"
           placeholder="지역을 입력해주세요."
           ref={location}
           disabled={isChecked}
+          onKeyPress={onEnterPress}
         />
         <SearchButton type="button" onClick={handleSearchButton}>
           검색하기
         </SearchButton>
-      </SearchByMyTownBox>
+      </SearchByMyTownWrapper>
     </SearchSection>
   );
 }
@@ -44,14 +46,14 @@ const SearchSection = styled(FlexBox)`
   width: 100%;
 `;
 
-const SearchBox = styled.div`
+const SearchWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
 `;
 
-const SearchByMyTownBox = styled(FlexBox)`
+const SearchByMyTownWrapper = styled(FlexBox)`
   gap: 15px;
 `;
 
