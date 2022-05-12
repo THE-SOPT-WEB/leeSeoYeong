@@ -3,7 +3,7 @@ import styled from "styled-components";
 function SearchStore({
   onChange,
   location,
-  isButtonChecked,
+  isChecked,
   handleSearchButton,
 }) {
   return (
@@ -18,7 +18,7 @@ function SearchStore({
           type="text"
           placeholder="지역을 입력해주세요."
           ref={location}
-          disabled={isButtonChecked}
+          disabled={isChecked}
         />
         <SearchButton type="button" onClick={handleSearchButton}>
           검색하기

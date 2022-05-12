@@ -9,23 +9,23 @@ function StoreDataCard({ isLoading, data, isChecked }) {
             return <Skeleton key={idx} />;
           })
         : data &&
-        data.map(({ place_url,place_name,phone,distance,address_name}, idx) => {
-            return (
-              <Card key={idx}>
-                <CardTitle href={place_url || null}>
-                  {place_name}
-                </CardTitle>
-                <InfoBox>
-                  <p className="info__tel">{phone || "번호 없음"}</p>
-                  {!isChecked ? (
-                    <p className="info__address">{distance}m</p>
-                  ) : (
-                    <p className="info__address">{address_name}</p>
-                  )}
-                </InfoBox>
-              </Card>
-            );
-          })}
+          data.map(
+            ({ place_url, place_name, phone, distance, address_name }, idx) => {
+              return (
+                <Card key={idx}>
+                  <CardTitle href={place_url || null}>{place_name}</CardTitle>
+                  <InfoBox>
+                    <p className="info__tel">{phone || "번호 없음"}</p>
+                    {!isChecked ? (
+                      <p className="info__address">{distance}m</p>
+                    ) : (
+                      <p className="info__address">{address_name}</p>
+                    )}
+                  </InfoBox>
+                </Card>
+              );
+            }
+          )}
     </>
   );
 }

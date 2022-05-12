@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { flushSync } from "react-dom";
 import styled from "styled-components";
 import axios from "axios";
 import StoreDataCard from "./StoreDataCard";
@@ -6,7 +7,7 @@ import SearchStore from "./SearchStore";
 
 function MainPage() {
   const [beerStores, setBeerStores] = useState([]); //가게 정보 배열
-  const [isButtonChecked, setIsButtonChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const location = useRef("");
 
@@ -15,14 +16,14 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
-    if (isButtonChecked) {
+    if (isChecked) {
       location.current.value = "";
     }
-  }, [isButtonChecked]);
+  }, [isChecked]);
 
   function handleSearchButton() {
-    setIsLoading(true);
-    if (!isButtonChecked) {
+    flushSync(() => setIsLoading(true));
+    if (!isChecked) {
       //입력 지역 근처 검색
       getDataNearByTown(location.current.value);
     } else {
@@ -34,8 +35,9 @@ function MainPage() {
   async function getDataNearByUser() {
     const { x, y } = await getLocation();
 
-    const { data } = await axios
-      .get("https://dapi.kakao.com//v2/local/search/keyword", {
+    const { data } = await axios.get(
+      "https://dapi.kakao.com//v2/local/search/keyword",
+      {
         headers: {
           Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
         },
@@ -45,18 +47,20 @@ function MainPage() {
           y: y,
           radius: 1000,
         },
-      })
-      .then(setIsLoading(false));
+      }
+    );
     data.documents.sort((a, b) => a.distance - b.distance);
-    setBeerStores(data.documents);
+    flushSync(() => setBeerStores(data.documents));
+    setIsLoading(false);
   }
 
   async function getDataNearByTown(location) {
     if (location) {
       const { x, y } = await getLocationCoords(location);
 
-      const { data } = await axios
-        .get("https://dapi.kakao.com//v2/local/search/keyword", {
+      const { data } = await axios.get(
+        "https://dapi.kakao.com//v2/local/search/keyword",
+        {
           headers: {
             Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
           },
@@ -66,10 +70,11 @@ function MainPage() {
             y: y,
             radius: 1000,
           },
-        })
-        .then(setIsLoading(false));
+        }
+      );
       data.documents.sort((a, b) => a.distance - b.distance); //거리순 정렬
-      setBeerStores(data.documents);
+      flushSync(() => setBeerStores(data.documents));
+      setIsLoading(false);
     }
   }
 
@@ -118,9 +123,9 @@ function MainPage() {
           <TitleSection>맥주 어디서 마실래?</TitleSection>
 
           <SearchStore
-            onChange={() => setIsButtonChecked(!isButtonChecked)}
+            onChange={() => setIsChecked((prev) => !prev)}
             location={location}
-            isButtonChecked={isButtonChecked}
+            isChecked={isChecked}
             handleSearchButton={handleSearchButton}
           />
 
