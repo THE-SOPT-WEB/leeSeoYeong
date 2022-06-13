@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import { useEffect, useState, useRef } from 'react';
 import { Letter } from '../types/Letter';
+import { useNavigate } from 'react-router-dom';
+import { client } from '../services';
 
 interface LetterFormProps {
   letterInfo: Letter;
 }
 
 export default function LetterForm({ letterInfo }: LetterFormProps) {
+  let navigate = useNavigate();
   const isEditing = letterInfo ? true : false;
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,8 +32,32 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
       placeholder: '누군가 내 비밀편지를 보도록 비밀번호 힌트를 주세요.',
     },
   ];
+
+  const onSubmitForm = async (e: any) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    [...e.target].forEach((input) => {
+      if (input.type === 'file') {
+        [...input.files].forEach((file) => {
+          formData.append(input.id, file);
+        });
+      } else {
+        formData.append(input.id, input.value);
+      }
+    });
+
+    try {
+      await client.post('/letter', formData);
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
-    <StWrapper>
+    <StWrapper onSubmit={onSubmitForm}>
       {inputInfo.map(({ label, id, placeholder, type }) => (
         <StInputWrapper key={id}>
           <label htmlFor={id}>{label}</label>
