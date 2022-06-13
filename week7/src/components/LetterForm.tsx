@@ -57,7 +57,7 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
   };
 
   return (
-    <StWrapper onSubmit={onSubmitForm}>
+    <StWrapper onSubmit={(e) => onSubmitForm(e)}>
       {inputInfo.map(({ label, id, placeholder, type }) => (
         <StInputWrapper key={id}>
           <label htmlFor={id}>{label}</label>
@@ -93,6 +93,7 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
 const StWrapper = styled.form`
   display: flex;
   flex-direction: column;
+  margin: 30px 0;
 
   width: 500px;
   gap: 35px;
