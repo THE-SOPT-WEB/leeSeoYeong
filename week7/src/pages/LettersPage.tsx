@@ -1,15 +1,31 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Letter from '../components/Letter';
+import Letters from '../components/Letters';
+import { client } from '../services';
+import { useEffect, useState } from 'react';
+import { Letter } from '../types/Letter';
 
 export default function LettersPage() {
+  const [letterInfo, setLetterInfo] = useState<Letter[]>([]);
+  useEffect(() => {
+    async function getLetterInfo() {
+      try {
+        const { data } = await client.get('/letter');
+        setLetterInfo(data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getLetterInfo();
+  }, []);
+
   return (
     <StWrapper>
       <StHeader>
         <h1>웹파트 비밀 편지함</h1>
         <StLink to="/write">편지 쓰러가기</StLink>
       </StHeader>
-      <Letter />
+      {letterInfo && <Letters letterInfo={letterInfo} />}
     </StWrapper>
   );
 }
