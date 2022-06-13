@@ -10,7 +10,9 @@ export default function Letters({ letterInfo }: LetterProps) {
   return (
     <StWrapper>
       {letterInfo.map(({ _id }) => (
-        <StLetter key={_id} src={lock} />
+        <StImageWrapper key={_id}>
+          <img src={lock} />
+        </StImageWrapper>
       ))}
     </StWrapper>
   );
@@ -20,6 +22,10 @@ const StWrapper = styled.div`
   grid-template-columns: repeat(3, 1fr);
   margin: 20px 0;
 `;
-const StLetter = styled.img`
-  width: 250px;
+const StImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  & > img {
+    width: 250px;
+  }
 `;
