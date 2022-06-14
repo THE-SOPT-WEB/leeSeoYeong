@@ -87,6 +87,8 @@ const StLetter = styled.div`
   gap: 15px;
   width: 300px;
   height: 100%;
+  padding: 10px;
+  text-align: center;
   & > h1 {
     font-size: 18px;
     & > span {
