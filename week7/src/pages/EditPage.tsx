@@ -2,15 +2,10 @@ import LetterForm from '../components/LetterForm';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import { Letter } from '../types/Letter';
-import { useEffect } from 'react';
 
 export default function EditPage() {
   const location = useLocation();
   const letterInfo = location.state as { letterInfo: Letter };
-
-  useEffect(() => {
-    console.log(letterInfo);
-  }, []);
 
   return (
     <StWrapper>

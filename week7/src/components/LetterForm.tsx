@@ -8,6 +8,10 @@ interface LetterFormProps {
   letterInfo: Letter;
 }
 
+interface BodyObject {
+  [key: string]: string; //index signature
+}
+
 export default function LetterForm({ letterInfo }: LetterFormProps) {
   let navigate = useNavigate();
   const isEditing = letterInfo ? true : false;
@@ -36,28 +40,40 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
   const onSubmitForm = async (e: any) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    if (!isEditing) {
+      const formData = new FormData();
 
-    [...e.target].forEach((input) => {
-      if (input.type === 'file') {
-        [...input.files].forEach((file) => {
-          formData.append(input.id, file);
-        });
-      } else {
-        formData.append(input.id, input.value);
+      [...e.target].forEach((input) => {
+        if (input.type === 'file') {
+          [...input.files].forEach((file) => {
+            formData.append(input.id, file);
+          });
+        } else {
+          formData.append(input.id, input.value);
+        }
+      });
+
+      try {
+        await client.post('/letter', formData);
+        navigate('/');
+      } catch (err) {
+        console.log(err);
       }
-    });
-
-    try {
-      await client.post('/letter', formData);
-      navigate('/');
-    } catch (err) {
-      console.log(err);
+    } else {
+      try {
+        let body: BodyObject = {};
+        [...e.target].forEach((input: any) => {
+          body[input.id] = input.value;
+        });
+        await client.patch(`/letter/${letterInfo._id}`, body);
+        navigate('/');
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
   const fillInputValue = (ref: HTMLInputElement) => {
-    console.log(letterInfo);
     if (ref && letterInfo) {
       if (ref.id === 'name') ref.value = letterInfo['name'];
       else if (ref.id === 'title') ref.value = letterInfo['title'];
