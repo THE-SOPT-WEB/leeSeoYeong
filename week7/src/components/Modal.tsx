@@ -5,12 +5,21 @@ import { useState } from 'react';
 interface ModalProps {
   hidden: boolean;
   hideModal: () => void;
-  letterInfo: Pick<Letter, 'hint' | 'password'>;
+  letterInfo: Pick<Letter, '_id' | 'hint' | 'password'>;
+  isVerified: (isCorrect: boolean, _id: string) => void;
 }
 
-export default function Modal({ hidden, hideModal, letterInfo }: ModalProps) {
-  const { hint, password } = letterInfo;
+export default function Modal({ hidden, hideModal, letterInfo, isVerified }: ModalProps) {
+  const { _id, hint, password } = letterInfo;
   const [input, setInput] = useState('');
+
+  const verifyInput = () => {
+    if (input === password) {
+      setInput('');
+      hideModal();
+      isVerified(true, _id);
+    }
+  };
   return (
     <>
       {!hidden && (
@@ -20,7 +29,9 @@ export default function Modal({ hidden, hideModal, letterInfo }: ModalProps) {
             <p>{hint}</p>
             <StInput type="text" value={input} onChange={(e) => setInput(e.target.value)} />
             <StButtonWrapper>
-              <button type="button">OK</button>
+              <button type="button" onClick={verifyInput}>
+                OK
+              </button>
               <button type="button" onClick={hideModal}>
                 cancel
               </button>
@@ -74,6 +85,7 @@ const StInput = styled.input`
   border-radius: 15px;
   width: 80%;
   padding: 10px 0;
+  text-indent: 10px;
 `;
 const StButtonWrapper = styled.div`
   display: flex;

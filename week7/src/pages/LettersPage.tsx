@@ -26,7 +26,9 @@ export default function LettersPage() {
         <h1>웹파트 비밀 편지함</h1>
         <StLink to="/write">편지 쓰러가기</StLink>
       </StHeader>
-      {letterInfo && <Letters letterInfo={letterInfo} />}
+      <StLetterWrapper>
+        {letterInfo && letterInfo.map((letter) => <Letters key={letter._id} letterInfo={letter} />)}
+      </StLetterWrapper>
     </StWrapper>
   );
 }
@@ -38,6 +40,8 @@ const StHeader = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  width: 100%;
   height: 70px;
   background-color: #e1e1e1;
   & > h1 {
@@ -53,4 +57,10 @@ const StLink = styled(Link)`
   background-color: #ff9500;
   font-weight: bold;
   color: #fff;
+`;
+const StLetterWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 90px 0;
+  gap: 30px;
 `;
