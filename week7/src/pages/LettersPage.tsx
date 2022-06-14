@@ -7,6 +7,7 @@ import { Letter } from '../types/Letter';
 
 export default function LettersPage() {
   const [letterInfo, setLetterInfo] = useState<Letter[]>([]);
+
   useEffect(() => {
     async function getLetterInfo() {
       try {
