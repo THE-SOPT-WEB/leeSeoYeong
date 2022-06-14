@@ -3,15 +3,16 @@ import lock from '../assets/lock.png';
 import { Letter } from '../types/Letter';
 import Modal from '../components/Modal';
 import { useState } from 'react';
-import { client } from '../services';
-import { stringify } from 'querystring';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface LetterProps {
   letterInfo: Letter;
 }
 
 export default function Letters({ letterInfo }: LetterProps) {
+  const navigate = useNavigate();
+
+  const { _id, name, content, hint, password, images } = letterInfo;
   const [isClickModal, setIsClickModal] = useState<boolean>(false);
   const [clickedInfo, setClickedInfo] = useState<Pick<Letter, '_id' | 'hint' | 'password'> | null>({
     _id: '',
@@ -19,17 +20,6 @@ export default function Letters({ letterInfo }: LetterProps) {
     password: '',
   });
   const [isVerified, setIsVerified] = useState<boolean>(false);
-  const [letter, setLetter] = useState<Letter | null>(null);
-
-  const showLetterInfo = async (isCorrect: boolean, _id: string) => {
-    setIsVerified(isCorrect);
-    try {
-      const { data } = await client.get(`/letter/${_id}`);
-      setLetter(data.data[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <>
@@ -38,37 +28,42 @@ export default function Letters({ letterInfo }: LetterProps) {
           hidden={!isClickModal}
           hideModal={() => setIsClickModal(false)}
           letterInfo={clickedInfo}
-          isVerified={(isCorrect: boolean, _id: string) => showLetterInfo(isCorrect, _id)}
+          isVerified={(isCorrect: boolean) => setIsVerified(isCorrect)}
         />
       )}
-      <StImageWrapper key={letterInfo._id}>
+      <StImageWrapper key={_id}>
         {!isVerified ? (
           <img
             src={lock}
             onClick={() => {
               setIsClickModal(true);
               setClickedInfo({
-                _id: letterInfo._id,
-                hint: letterInfo.hint,
-                password: letterInfo.password,
+                _id: _id,
+                hint: hint,
+                password: password,
               });
             }}
           />
         ) : (
-          letter && (
-            <StLetter>
-              <StLetterImage>
-                {letter.images?.map((url: string) => (
-                  <StImage key={url} url={url} />
-                ))}
-              </StLetterImage>
-              <h1>
-                <span>{letter.name}</span>님이 남긴 편지에요.
-              </h1>
-              <p>{letter.content}</p>
-              <StLink to="/edit">내맘대로 수정하기</StLink>
-            </StLetter>
-          )
+          <StLetter>
+            <StLetterImage>
+              {images?.map((url: string) => (
+                <StImage key={url} url={url} />
+              ))}
+            </StLetterImage>
+            <h1>
+              <span>{name}</span>님이 남긴 편지에요.
+            </h1>
+            <p>{content}</p>
+            <StLink
+              type="button"
+              onClick={() => {
+                navigate('/edit', { state: letterInfo });
+              }}
+            >
+              내맘대로 수정하기
+            </StLink>
+          </StLetter>
         )}
       </StImageWrapper>
     </>
@@ -114,7 +109,7 @@ const StImage = styled.img<{ url: string }>`
   background-repeat: no-repeat;
   background-position: center;
 `;
-const StLink = styled(Link)`
+const StLink = styled.button`
   background-color: #ff9500;
   padding: 10px 20px;
   border-radius: 15px;

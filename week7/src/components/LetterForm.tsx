@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState, useRef } from 'react';
+import { useRef } from 'react';
 import { Letter } from '../types/Letter';
 import { useNavigate } from 'react-router-dom';
 import { client } from '../services';
@@ -56,12 +56,23 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
     }
   };
 
+  const fillInputValue = (ref: HTMLInputElement) => {
+    console.log(letterInfo);
+    if (ref && letterInfo) {
+      if (ref.id === 'name') ref.value = letterInfo['name'];
+      else if (ref.id === 'title') ref.value = letterInfo['title'];
+      else if (ref.id === 'content') ref.value = letterInfo['content'];
+      else if (ref.id === 'hint') ref.value = letterInfo['hint'];
+      else if (ref.id === 'password') ref.value = letterInfo['password'];
+    }
+  };
+
   return (
     <StWrapper onSubmit={(e) => onSubmitForm(e)}>
       {inputInfo.map(({ label, id, placeholder, type }) => (
         <StInputWrapper key={id}>
           <label htmlFor={id}>{label}</label>
-          <input type={type || 'text'} placeholder={placeholder} id={id} />
+          <input type={type || 'text'} placeholder={placeholder} id={id} ref={fillInputValue} />
         </StInputWrapper>
       ))}
       {!isEditing && (

@@ -6,18 +6,18 @@ interface ModalProps {
   hidden: boolean;
   hideModal: () => void;
   letterInfo: Pick<Letter, '_id' | 'hint' | 'password'>;
-  isVerified: (isCorrect: boolean, _id: string) => void;
+  isVerified: (isCorrect: boolean) => void;
 }
 
 export default function Modal({ hidden, hideModal, letterInfo, isVerified }: ModalProps) {
-  const { _id, hint, password } = letterInfo;
+  const { hint, password } = letterInfo;
   const [input, setInput] = useState('');
 
   const verifyInput = () => {
     if (input === password) {
       setInput('');
       hideModal();
-      isVerified(true, _id);
+      isVerified(true);
     }
   };
   return (
