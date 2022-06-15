@@ -62,7 +62,7 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
     } else {
       try {
         let body: BodyObject = {};
-        [...e.target].forEach((input: any) => {
+        [...e.target].forEach((input) => {
           body[input.id] = input.value;
         });
         await client.patch(`/letter/${letterInfo._id}`, body);
@@ -75,8 +75,7 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
 
   const fillInputValue = (ref: HTMLInputElement) => {
     if (ref && letterInfo) {
-      if (ref.id === 'name') ref.value = letterInfo['name'];
-      else if (ref.id === 'title') ref.value = letterInfo['title'];
+      if (ref.id === 'name') ref.value = letterInfo['name'] as string;
       else if (ref.id === 'content') ref.value = letterInfo['content'];
       else if (ref.id === 'hint') ref.value = letterInfo['hint'];
       else if (ref.id === 'password') ref.value = letterInfo['password'];

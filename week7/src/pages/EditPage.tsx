@@ -5,7 +5,7 @@ import { Letter } from '../types/Letter';
 
 export default function EditPage() {
   const location = useLocation();
-  const letterInfo = location.state as { letterInfo: Letter };
+  const letterInfo = location.state as Letter;
 
   return (
     <StWrapper>
