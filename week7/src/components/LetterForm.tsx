@@ -61,7 +61,7 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
       }
     } else {
       try {
-        let body: BodyObject = {};
+        const body: BodyObject = {};
         [...e.target].forEach((input) => {
           body[input.id] = input.value;
         });
@@ -75,10 +75,8 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
 
   const fillInputValue = (ref: HTMLInputElement) => {
     if (ref && letterInfo) {
-      if (ref.id === 'name') ref.value = letterInfo['name'] as string;
-      else if (ref.id === 'content') ref.value = letterInfo['content'];
-      else if (ref.id === 'hint') ref.value = letterInfo['hint'];
-      else if (ref.id === 'password') ref.value = letterInfo['password'];
+      if (ref.id === 'name' || ref.id === 'content' || ref.id === 'hint' || ref.id === 'password')
+        ref.value = letterInfo[ref.id] as string;
     }
   };
 

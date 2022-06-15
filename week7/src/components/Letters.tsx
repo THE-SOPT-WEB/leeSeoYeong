@@ -14,16 +14,12 @@ export default function Letters({ letterInfo }: LetterProps) {
 
   const { _id, name, content, hint, password, images } = letterInfo;
   const [isClickModal, setIsClickModal] = useState<boolean>(false);
-  const [clickedInfo, setClickedInfo] = useState<Pick<Letter, '_id' | 'hint' | 'password'> | null>({
-    _id: '',
-    hint: '',
-    password: '',
-  });
+  const [clickedInfo, setClickedInfo] = useState<Pick<Letter, '_id' | 'hint' | 'password'>>();
   const [isVerified, setIsVerified] = useState<boolean>(false);
 
   return (
     <>
-      {clickedInfo !== null && (
+      {clickedInfo && (
         <Modal
           hidden={!isClickModal}
           hideModal={() => setIsClickModal(false)}
@@ -38,9 +34,9 @@ export default function Letters({ letterInfo }: LetterProps) {
             onClick={() => {
               setIsClickModal(true);
               setClickedInfo({
-                _id: _id,
-                hint: hint,
-                password: password,
+                _id,
+                hint,
+                password,
               });
             }}
           />

@@ -7,10 +7,13 @@ const GlobalStyle = createGlobalStyle`
   body {
     max-width: 100vw;
     margin: 0 auto;
+    font-family: 'Noto Sans KR', sans-serif;
+
   }
   
   * {
     box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
   }
   button {
     cursor: pointer;

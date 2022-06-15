@@ -4,5 +4,5 @@ export interface Letter {
   password: string;
   hint: string;
   content: string;
-  images: string[] | null;
+  images: string[];
 }
