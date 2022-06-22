@@ -5,12 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import { client } from '../services';
 
 interface LetterFormProps {
-  letterInfo: Letter;
+  letterInfo: Letter | null;
 }
 
-interface BodyObject {
-  [key: string]: string; //index signature
-}
+type inputType = {
+  name: string;
+  password: string;
+  hint: string;
+  content: string;
+};
+type bodyType = Record<keyof inputType, string>;
 
 export default function LetterForm({ letterInfo }: LetterFormProps) {
   let navigate = useNavigate();
@@ -37,20 +41,24 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
     },
   ];
 
-  const onSubmitForm = async (e: any) => {
+  const onSubmitForm = async (e: React.FormEvent<HTMLInputElement | HTMLFormElement>) => {
     e.preventDefault();
+    const target = e.target as HTMLInputElement;
 
     if (!isEditing) {
       const formData = new FormData();
-
-      [...e.target].forEach((input) => {
-        if (input.type === 'file') {
-          [...input.files].forEach((file) => {
-            formData.append(input.id, file);
-          });
-        } else {
-          formData.append(input.id, input.value);
-        }
+      [...target.childNodes].forEach((t) => {
+        [...t.childNodes].forEach((input: ChildNode | HTMLInputElement) => {
+          if (input.nodeName === 'INPUT' && input instanceof HTMLInputElement) {
+            if (input.type === 'file' && input.files) {
+              Array.from(input.files).forEach((file) => {
+                formData.append(input.id, file);
+              });
+            } else {
+              formData.append(input.id, input.value);
+            }
+          }
+        });
       });
 
       try {
@@ -61,11 +69,28 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
       }
     } else {
       try {
-        const body: BodyObject = {};
-        [...e.target].forEach((input) => {
-          body[input.id] = input.value;
+        let body: bodyType = {
+          name: '',
+          password: '',
+          hint: '',
+          content: '',
+        };
+        [...target.childNodes].forEach((t) => {
+          [...t.childNodes].forEach((input: ChildNode | HTMLInputElement) => {
+            if (input.nodeName === 'INPUT' && input instanceof HTMLInputElement) {
+              if (
+                input.id === 'name' ||
+                input.id === 'hint' ||
+                input.id === 'password' ||
+                input.id === 'content'
+              ) {
+                body[input.id] = input.value;
+              }
+            }
+          });
         });
-        await client.patch(`/letter/${letterInfo._id}`, body);
+
+        await client.patch(`/letter/${letterInfo?._id}`, body);
         navigate('/');
       } catch (err) {
         console.log(err);
@@ -81,11 +106,13 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
   };
 
   return (
-    <StWrapper onSubmit={(e) => onSubmitForm(e)}>
+    <StWrapper
+      onSubmit={(e: React.FormEvent<HTMLInputElement | HTMLFormElement>) => onSubmitForm(e)}
+    >
       {inputInfo.map(({ label, id, placeholder, type }) => (
         <StInputWrapper key={id}>
           <label htmlFor={id}>{label}</label>
-          <input type={type || 'text'} placeholder={placeholder} id={id} ref={fillInputValue} />
+          <input type={type || 'text'} ref={fillInputValue} placeholder={placeholder} id={id} />
         </StInputWrapper>
       ))}
       {!isEditing && (

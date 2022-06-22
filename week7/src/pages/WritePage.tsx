@@ -7,7 +7,7 @@ export default function WritePage() {
       <header>
         <h1>비밀 편지를 써보세요.</h1>
       </header>
-      <LetterForm />
+      <LetterForm letterInfo={null} />
     </StWrapper>
   );
 }
