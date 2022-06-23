@@ -1,14 +1,28 @@
 import styled from "styled-components";
 import SearchSection from "../components/SearchSection";
+import ResultSection from "../components/ResultSection";
+import { useState, useEffect } from "react";
+import { Store } from "../types";
+import { getLocationBasedSearch } from "../services";
 
 export default function MainPage() {
+  const [storeInfo, setStoreInfo] = useState<Store[]>([]);
+
+  useEffect(() => {}, []);
+
+  const onClickSearchButton = async () => {
+    const data = await getLocationBasedSearch();
+    setStoreInfo(data);
+  };
+
   return (
     <StWrapper>
       <StHeader>
         <h1>노인코래방</h1>
       </StHeader>
 
-      <SearchSection />
+      <SearchSection onClick={onClickSearchButton} />
+      <ResultSection storeInfo={storeInfo} />
     </StWrapper>
   );
 }

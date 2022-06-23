@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export default function SearchSection() {
+interface SearchSectionProps {
+  onClick: () => void;
+}
+
+export default function SearchSection({ onClick }: SearchSectionProps) {
   return (
     <StWrapper>
       <StCheckBoxWrapper>
@@ -13,7 +17,9 @@ export default function SearchSection() {
         <input type="text" placeholder="지역을 입력해주세요." />
       </StTextInputWrapper>
 
-      <StSearchButton type="button">검색하기</StSearchButton>
+      <StSearchButton type="button" onClick={onClick}>
+        검색하기
+      </StSearchButton>
     </StWrapper>
   );
 }
