@@ -9,21 +9,18 @@ export default function MainPage() {
   const [storeInfo, setStoreInfo] = useState<Store[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (isChecked) {
-      searchLocationBased();
-    }
-  }, [isChecked]);
-
   const onClickSearchButton = (isCheck: boolean) => {
     setIsChecked(isCheck);
+
+    if (isCheck) {
+      searchLocationBased();
+    }
   };
 
   const searchLocationBased = async () => {
     const data = await getLocationBasedSearch();
-    console.log(data);
 
-    data && setStoreInfo(data);
+    setStoreInfo(data);
   };
 
   return (

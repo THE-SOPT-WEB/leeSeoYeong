@@ -23,7 +23,7 @@ export const getLocationBasedSearch = async (): Promise<Store[]> => {
       },
     }
   );
-  return data.document;
+  return data.documents;
 };
 
 export const getLocation = (): Location | Promise<Location> => {
