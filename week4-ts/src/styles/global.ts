@@ -38,9 +38,6 @@ const GlobalStyle = createGlobalStyle`
   a {
     text-decoration:none;
   }
-  input[disabled] {
-    background-color: white;
-  }
 `;
 
 export default GlobalStyle;

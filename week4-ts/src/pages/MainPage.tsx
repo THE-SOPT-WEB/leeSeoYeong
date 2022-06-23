@@ -7,12 +7,23 @@ import { getLocationBasedSearch } from "../services";
 
 export default function MainPage() {
   const [storeInfo, setStoreInfo] = useState<Store[]>([]);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (isChecked) {
+      searchLocationBased();
+    }
+  }, [isChecked]);
 
-  const onClickSearchButton = async () => {
+  const onClickSearchButton = (isCheck: boolean) => {
+    setIsChecked(isCheck);
+  };
+
+  const searchLocationBased = async () => {
     const data = await getLocationBasedSearch();
-    setStoreInfo(data);
+    console.log(data);
+
+    data && setStoreInfo(data);
   };
 
   return (
@@ -21,8 +32,10 @@ export default function MainPage() {
         <h1>노인코래방</h1>
       </StHeader>
 
-      <SearchSection onClick={onClickSearchButton} />
-      <ResultSection storeInfo={storeInfo} />
+      <SearchSection
+        onClick={(isCheck: boolean) => onClickSearchButton(isCheck)}
+      />
+      <ResultSection storeInfo={storeInfo} isCheck={isChecked} />
     </StWrapper>
   );
 }

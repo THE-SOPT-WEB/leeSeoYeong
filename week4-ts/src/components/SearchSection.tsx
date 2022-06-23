@@ -1,23 +1,33 @@
 import styled from "styled-components";
+import { useState } from "react";
 
 interface SearchSectionProps {
-  onClick: () => void;
+  onClick: (isCheck: boolean) => void;
 }
 
 export default function SearchSection({ onClick }: SearchSectionProps) {
+  const [isCheck, setIsCheck] = useState<boolean>(false);
   return (
     <StWrapper>
       <StCheckBoxWrapper>
         <label htmlFor="checkbox">지역 기반으로 검색</label>
-        <input type="checkbox" id="checkbox" />
+        <input
+          type="checkbox"
+          id="checkbox"
+          onChange={() => setIsCheck(!isCheck)}
+        />
       </StCheckBoxWrapper>
 
       <StTextInputWrapper>
         <label htmlFor="text">우리 동네는 여기에요</label>
-        <input type="text" placeholder="지역을 입력해주세요." />
+        <input
+          type="text"
+          placeholder="지역을 입력해주세요."
+          disabled={isCheck}
+        />
       </StTextInputWrapper>
 
-      <StSearchButton type="button" onClick={onClick}>
+      <StSearchButton type="button" onClick={() => onClick(isCheck)}>
         검색하기
       </StSearchButton>
     </StWrapper>
