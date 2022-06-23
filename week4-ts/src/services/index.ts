@@ -26,6 +26,27 @@ export const getLocationBasedSearch = async (): Promise<Store[]> => {
   return data.documents;
 };
 
+export const getStoreBasedTown = async (town: string): Promise<Store[]> => {
+  const location = await getLocation();
+  const { x, y } = location;
+
+  const { data } = await axios.get(
+    "https://dapi.kakao.com//v2/local/search/keyword",
+    {
+      headers: {
+        Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
+      },
+      params: {
+        x: x,
+        y: y,
+        radius: 1000,
+        query: `${town} 노래방`,
+      },
+    }
+  );
+  return data.documents;
+};
+
 export const getLocation = (): Location | Promise<Location> => {
   if ("geolocation" in navigator) {
     return new Promise((resolve) => {
