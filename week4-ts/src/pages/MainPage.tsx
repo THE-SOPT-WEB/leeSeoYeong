@@ -3,24 +3,33 @@ import SearchSection from "../components/SearchSection";
 import ResultSection from "../components/ResultSection";
 import { useState, useEffect } from "react";
 import { Store } from "../types";
-import { getLocationBasedSearch } from "../services";
+import { getLocationBasedSearch, getStoreBasedTown } from "../services";
 
 export default function MainPage() {
   const [storeInfo, setStoreInfo] = useState<Store[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onClickSearchButton = (isCheck: boolean) => {
+  const onClickSearchButton = (isCheck: boolean, myTown: string) => {
     setIsChecked(isCheck);
     setIsLoading(true);
 
     if (isCheck) {
       searchLocationBased();
+    } else {
+      searchTownBased(myTown);
     }
   };
 
   const searchLocationBased = async () => {
     const data = await getLocationBasedSearch();
+
+    setStoreInfo(data);
+    setIsLoading(false);
+  };
+
+  const searchTownBased = async (myTown: string) => {
+    const data = await getStoreBasedTown(myTown);
 
     setStoreInfo(data);
     setIsLoading(false);
@@ -33,7 +42,9 @@ export default function MainPage() {
       </StHeader>
 
       <SearchSection
-        onClick={(isCheck: boolean) => onClickSearchButton(isCheck)}
+        onClick={(isCheck: boolean, myTown: string) =>
+          onClickSearchButton(isCheck, myTown)
+        }
       />
       <ResultSection
         storeInfo={storeInfo}
@@ -58,11 +69,22 @@ const StHeader = styled.header`
   display: flex;
   justify-content: center;
   padding: 10px;
-  margin-top: 10px;
   width: 100%;
   border-bottom: 1px solid #fff;
   & > h1 {
     color: #fff;
     font-weight: bold;
+    font-size: 22px;
+    background-image: linear-gradient(
+      90deg,
+      red,
+      orange,
+      yellow,
+      green,
+      aqua,
+      purple
+    );
+    -webkit-background-clip: text;
+    color: transparent;
   }
 `;

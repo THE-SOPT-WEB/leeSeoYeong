@@ -1,12 +1,18 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface SearchSectionProps {
-  onClick: (isCheck: boolean) => void;
+  onClick: (isCheck: boolean, myTown: string) => void;
 }
 
 export default function SearchSection({ onClick }: SearchSectionProps) {
   const [isCheck, setIsCheck] = useState<boolean>(false);
+  const [myTown, setMyTown] = useState<string>("");
+
+  useEffect(() => {
+    if (isCheck) setMyTown("");
+  }, [isCheck]);
+
   return (
     <StWrapper>
       <StCheckBoxWrapper>
@@ -24,10 +30,11 @@ export default function SearchSection({ onClick }: SearchSectionProps) {
           type="text"
           placeholder="지역을 입력해주세요."
           disabled={isCheck}
+          onChange={(e) => setMyTown(e.target.value)}
         />
       </StTextInputWrapper>
 
-      <StSearchButton type="button" onClick={() => onClick(isCheck)}>
+      <StSearchButton type="button" onClick={() => onClick(isCheck, myTown)}>
         검색하기
       </StSearchButton>
     </StWrapper>
