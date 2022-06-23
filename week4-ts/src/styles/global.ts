@@ -5,7 +5,10 @@ const GlobalStyle = createGlobalStyle`
   ${reset};
   html,
   body {
-    max-width: 100vw;
+    display:flex;
+    max-width: 320px;
+    
+    background-color:#232332;
     margin: 0 auto;
   }
   
@@ -19,10 +22,6 @@ const GlobalStyle = createGlobalStyle`
     -webkit-appearance: none;
     border-radius: 0;
     padding: 0;
-  }
-  input {
-    -webkit-appearance: none;
-    -webkit-border-radius: 0;
   }
   input:focus {
     outline: none;
