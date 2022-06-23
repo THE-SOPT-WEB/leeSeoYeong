@@ -78,14 +78,22 @@ export default function LetterForm({ letterInfo }: LetterFormProps) {
         [...target.childNodes].forEach((t) => {
           [...t.childNodes].forEach((input: ChildNode | HTMLInputElement) => {
             if (input.nodeName === 'INPUT' && input instanceof HTMLInputElement) {
-              let id = input.id as keyof typeof body;
-              body[id] = input.value;
+              if (
+                input.id === 'name' ||
+                input.id === 'hint' ||
+                input.id === 'password' ||
+                input.id === 'content'
+              ) {
+                body[input.id] = input.value;
+              }
+              // let id = input.id as keyof typeof body;
+              // body[id] = input.value;
             }
           });
         });
 
-        await client.patch(`/letter/${letterInfo?._id}`, body);
-        navigate('/');
+        // await client.patch(`/letter/${letterInfo?._id}`, body);
+        // navigate('/');
       } catch (err) {
         console.log(err);
       }
