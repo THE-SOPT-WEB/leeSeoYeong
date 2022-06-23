@@ -30,6 +30,7 @@ export default function SearchSection({ onClick }: SearchSectionProps) {
           type="text"
           placeholder="지역을 입력해주세요."
           disabled={isCheck}
+          value={myTown}
           onChange={(e) => setMyTown(e.target.value)}
         />
       </StTextInputWrapper>

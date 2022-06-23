@@ -31,7 +31,7 @@ export const getStoreBasedTown = async (town: string): Promise<Store[]> => {
   const { x, y } = location;
 
   const { data } = await axios.get(
-    "https://dapi.kakao.com//v2/local/search/keyword",
+    "https://dapi.kakao.com/v2/local/search/keyword",
     {
       headers: {
         Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
