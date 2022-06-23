@@ -1,3 +1,10 @@
+import GlobalStyle from "./styles/global";
+import MainPage from "./pages/MainPage";
 export default function App() {
-  return <div>App</div>;
+  return (
+    <>
+      <GlobalStyle />
+      <MainPage />
+    </>
+  );
 }
