@@ -8,9 +8,11 @@ import { getLocationBasedSearch } from "../services";
 export default function MainPage() {
   const [storeInfo, setStoreInfo] = useState<Store[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const onClickSearchButton = (isCheck: boolean) => {
     setIsChecked(isCheck);
+    setIsLoading(true);
 
     if (isCheck) {
       searchLocationBased();
@@ -21,6 +23,7 @@ export default function MainPage() {
     const data = await getLocationBasedSearch();
 
     setStoreInfo(data);
+    setIsLoading(false);
   };
 
   return (
@@ -32,7 +35,11 @@ export default function MainPage() {
       <SearchSection
         onClick={(isCheck: boolean) => onClickSearchButton(isCheck)}
       />
-      <ResultSection storeInfo={storeInfo} isCheck={isChecked} />
+      <ResultSection
+        storeInfo={storeInfo}
+        isCheck={isChecked}
+        isLoading={isLoading}
+      />
     </StWrapper>
   );
 }
