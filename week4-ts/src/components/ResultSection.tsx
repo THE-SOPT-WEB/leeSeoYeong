@@ -19,13 +19,13 @@ export default function ResultSection({
         new Array(10).fill(1).map((_, idx) => {
           return <Skeleton key={idx} />;
         })}
-      {!isLoading && storeInfo.length === 0 && (
+      {!isLoading && storeInfo.length === 0 ? (
         <div style={{ color: "#fff" }}>검색 결과가 없습니다.</div>
-      )}
-      {!isLoading &&
+      ) : (
         storeInfo?.map((store: Store, idx: number) => (
           <StoreCard key={idx} store={store} isCheck={isCheck} />
-        ))}
+        ))
+      )}
     </>
   );
 }
