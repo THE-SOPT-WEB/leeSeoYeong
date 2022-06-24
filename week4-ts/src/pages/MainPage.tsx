@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import SearchSection from "../components/SearchSection";
 import ResultSection from "../components/ResultSection";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Store } from "../types";
 import { getLocationBasedSearch, getStoreBasedTown } from "../services";
 
@@ -15,24 +15,26 @@ export default function MainPage() {
     setIsLoading(true);
 
     if (isCheck) {
-      searchLocationBased();
+      searchLocationBased().then((res) => {
+        setStoreInfo(res);
+        setIsLoading(false);
+      });
     } else {
-      searchTownBased(myTown);
+      searchTownBased(myTown).then((res) => {
+        setStoreInfo(res);
+        setIsLoading(false);
+      });
     }
   };
 
   const searchLocationBased = async () => {
     const data = await getLocationBasedSearch();
-
-    setStoreInfo(data);
-    setIsLoading(false);
+    return data;
   };
 
   const searchTownBased = async (myTown: string) => {
     const data = await getStoreBasedTown(myTown);
-
-    setStoreInfo(data);
-    setIsLoading(false);
+    return data;
   };
 
   return (

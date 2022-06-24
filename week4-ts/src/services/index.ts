@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "./api";
 import { Store } from "../types";
 
 interface Location {
@@ -9,20 +9,14 @@ export const getLocationBasedSearch = async (): Promise<Store[]> => {
   const location = await getLocation();
   const { x, y } = location;
 
-  const { data } = await axios.get(
-    "https://dapi.kakao.com//v2/local/search/keyword",
-    {
-      headers: {
-        Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
-      },
-      params: {
-        x: x,
-        y: y,
-        radius: 1000,
-        query: "노래방",
-      },
-    }
-  );
+  const { data } = await api.get("", {
+    params: {
+      x: x,
+      y: y,
+      radius: 1000,
+      query: "노래방",
+    },
+  });
   return data.documents;
 };
 
@@ -30,20 +24,14 @@ export const getStoreBasedTown = async (town: string): Promise<Store[]> => {
   const location = await getLocation();
   const { x, y } = location;
 
-  const { data } = await axios.get(
-    "https://dapi.kakao.com/v2/local/search/keyword",
-    {
-      headers: {
-        Authorization: `KakaoAK ${import.meta.env.VITE_APP_KAKAO_AK}`,
-      },
-      params: {
-        x: x,
-        y: y,
-        radius: 1000,
-        query: `${town} 노래방`,
-      },
-    }
-  );
+  const { data } = await api.get("", {
+    params: {
+      x: x,
+      y: y,
+      radius: 1000,
+      query: `${town}노래방`,
+    },
+  });
   return data.documents;
 };
 
