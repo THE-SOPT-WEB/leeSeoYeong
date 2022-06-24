@@ -14,7 +14,7 @@ export default function StoreCard({ store, isCheck }: StoreCardProps) {
       <a href={place_url || undefined}>{place_name}</a>
       <StCardInfo>
         <p className="info__tel">{phone || "번호 없음"}</p>
-        {!isCheck ? (
+        {isCheck ? (
           <p>{distance}m</p>
         ) : (
           <p className="info__address">{address_name}</p>
@@ -54,7 +54,8 @@ const StCardInfo = styled.div`
 
   & > .info__tel {
     width: 100px;
-    height: 20px;
+    height: fit-content;
+    min-height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -64,6 +65,7 @@ const StCardInfo = styled.div`
     color: #fff;
     font-size: 12px;
     font-weight: 700;
+    text-align: center;
   }
 
   & > .info__address {

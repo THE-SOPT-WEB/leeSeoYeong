@@ -21,15 +21,9 @@ export const getLocationBasedSearch = async (): Promise<Store[]> => {
 };
 
 export const getStoreBasedTown = async (town: string): Promise<Store[]> => {
-  const location = await getLocation();
-  const { x, y } = location;
-
   const { data } = await api.get("", {
     params: {
-      x: x,
-      y: y,
-      radius: 1000,
-      query: `${town}노래방`,
+      query: `${town} 노래방`,
     },
   });
   return data.documents;
